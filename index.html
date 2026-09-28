@@ -124,18 +124,33 @@
             }
 
             body {
-                zoom: var(--tablet-zoom, 0.85) !important;
-                width: calc(100vw / var(--tablet-zoom, 0.85)) !important;
-                max-width: calc(100vw / var(--tablet-zoom, 0.85)) !important;
-                height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
-                min-height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
-                max-height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
+                zoom: var(--tablet-zoom, 0.70) !important;
+                width: calc(100vw / var(--tablet-zoom, 0.70)) !important;
+                max-width: calc(100vw / var(--tablet-zoom, 0.70)) !important;
+                height: calc(100dvh / var(--tablet-zoom, 0.70)) !important;
+                min-height: calc(100dvh / var(--tablet-zoom, 0.70)) !important;
+                max-height: calc(100dvh / var(--tablet-zoom, 0.70)) !important;
                 overflow: hidden !important;
                 -webkit-text-size-adjust: 100%;
             }
 
             .tab-zoom-pill {
                 display: inline-flex !important;
+            }
+
+            .kassa-product-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+                gap: 0.625rem !important;
+            }
+
+            .kassa-cart-aside {
+                width: 380px !important;
+                min-width: 360px !important;
+            }
+
+            .dashboard-chart-card {
+                min-height: 300px !important;
+                height: 320px !important;
             }
         }
     </style>
@@ -168,7 +183,7 @@
                 <!-- Tablet Zoom Pill Controller (Visible only on tablet landscape <=1024px x <=550px) -->
                 <div class="tab-zoom-pill items-center gap-1 bg-slate-100 p-0.5 sm:p-1 rounded-full border border-slate-200 shadow-2xs" title="Масштаб для планшета">
                     <button type="button" onclick="changeTabletZoom(-0.05)" class="w-6 h-6 rounded-full bg-white hover:bg-slate-200 active:scale-95 text-slate-700 font-black text-xs flex items-center justify-center shadow-xs transition-all touch-manipulation cursor-pointer" aria-label="Уменьшить масштаб">−</button>
-                    <button type="button" onclick="resetTabletZoom()" id="tablet-zoom-value" class="px-1.5 text-[11px] font-black text-slate-700 hover:text-accent select-none cursor-pointer" title="Сбросить масштаб (85%)">85%</button>
+                    <button type="button" onclick="resetTabletZoom()" id="tablet-zoom-value" class="px-1.5 text-[11px] font-black text-slate-700 hover:text-accent select-none cursor-pointer" title="Сбросить масштаб (70%)">70%</button>
                     <button type="button" onclick="changeTabletZoom(0.05)" class="w-6 h-6 rounded-full bg-white hover:bg-slate-200 active:scale-95 text-slate-700 font-black text-xs flex items-center justify-center shadow-xs transition-all touch-manipulation cursor-pointer" aria-label="Увеличить масштаб">+</button>
                 </div>
                 <div id="desktop-lang-container"></div>
@@ -203,7 +218,7 @@
 
     <script>
         // --- TABLET ZOOM CONTROLLER ---
-        const TABLET_ZOOM_KEY = 'pos_tablet_zoom_v2';
+        const TABLET_ZOOM_KEY = 'pos_tablet_zoom_v3';
         let tabletZoomLevel = (() => {
             try {
                 const saved = localStorage.getItem(TABLET_ZOOM_KEY);
@@ -212,7 +227,7 @@
                     if (parsed >= 0.5 && parsed <= 1.0) return Math.round(parsed * 100) / 100;
                 }
             } catch (e) {}
-            return 0.85; // Default 85%
+            return 0.70; // Default 70% as requested by user
         })();
 
         const applyTabletZoom = () => {
@@ -256,9 +271,9 @@
         };
 
         window.resetTabletZoom = () => {
-            tabletZoomLevel = 0.85;
+            tabletZoomLevel = 0.70;
             try {
-                localStorage.setItem(TABLET_ZOOM_KEY, '0.85');
+                localStorage.setItem(TABLET_ZOOM_KEY, '0.70');
             } catch (e) {}
             applyTabletZoom();
             window.dispatchEvent(new Event('resize'));
@@ -1097,23 +1112,23 @@
                             <input type="text" placeholder="${t('search_product')}" class="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:border-accent shadow-sm font-medium text-xs sm:text-sm no-print min-h-[40px]" value="${state.kassa.search}" oninput="filterProducts(this.value)">
                         </div>
 
-                        <!-- Product Cards Grid with internal independent scroll -->
-                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5 overflow-y-auto custom-scrollbar flex-1 min-h-0 pb-2 no-print touch-pan-y">
+                        <!-- Product Cards Grid with internal independent scroll (4 columns) -->
+                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-2.5 overflow-y-auto custom-scrollbar flex-1 min-h-0 pb-2 no-print touch-pan-y kassa-product-grid">
                             ${kassaProducts.map(p => {
                                 const isVisible = p.name.toLowerCase().includes(searchQuery);
                                 return `
-                                    <button onclick="addToOrder('${p.id}')" data-name="${p.name.toLowerCase()}" class="product-card bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 ${p.stock <= 0 ? 'border-dashed border-red-300 opacity-60 bg-red-50/10 cursor-not-allowed shadow-none' : p.stock <= 3 ? 'border-red-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all active:scale-95 text-left flex flex-col justify-between ${isVisible ? '' : 'hidden'} focus:outline-none focus:ring-0 select-none min-h-[50px] touch-manipulation">
-                                        <div>
-                                            <div class="w-full aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl shadow-inner bg-slate-50 mb-2 sm:mb-2.5 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0 min-h-[90px] sm:min-h-[115px]">
+                                    <button onclick="addToOrder('${p.id}')" data-name="${p.name.toLowerCase()}" class="product-card bg-white p-2 sm:p-2.5 rounded-xl border-2 ${p.stock <= 0 ? 'border-dashed border-red-300 opacity-60 bg-red-50/10 cursor-not-allowed shadow-none' : p.stock <= 3 ? 'border-red-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all active:scale-95 text-left flex flex-col justify-between ${isVisible ? '' : 'hidden'} focus:outline-none focus:ring-0 select-none min-h-[175px] sm:min-h-[190px] touch-manipulation">
+                                        <div class="w-full">
+                                            <div class="w-full aspect-[4/3] rounded-lg shadow-inner bg-slate-50 mb-1.5 sm:mb-2 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0 min-h-[90px] sm:min-h-[105px]">
                                                 ${p.photoUrl ? `<img src="${p.photoUrl}" class="w-full h-full object-cover">` : '📦'}
                                             </div>
-                                            <h3 class="font-bold text-xs sm:text-sm lg:text-base line-clamp-1 sm:line-clamp-2 text-slate-800 leading-snug mb-1" title="${p.name}">${p.name}</h3>
+                                            <h3 class="font-bold text-xs sm:text-[13px] line-clamp-2 text-slate-800 leading-snug mb-0.5" title="${p.name}">${p.name}</h3>
                                         </div>
-                                        <div class="flex justify-between items-center w-full mt-1.5 sm:mt-2.5 pt-1.5 sm:pt-2 border-t border-slate-50">
-                                            <div class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${p.stock <= 0 ? 'text-red-600 bg-red-50/50 px-1.5 py-0.5 rounded-md border border-red-100' : p.stock <= 3 ? 'text-red-500 bg-red-50/20 px-1.5 py-0.5 rounded-md' : 'text-slate-400 bg-slate-50/85 px-1.5 py-0.5 rounded-md'}">
+                                        <div class="flex justify-between items-center w-full mt-1.5 pt-1.5 border-t border-slate-100">
+                                            <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${p.stock <= 0 ? 'text-red-600 bg-red-50/50 px-1 py-0.5 rounded' : p.stock <= 3 ? 'text-red-500 bg-red-50/20 px-1 py-0.5 rounded' : 'text-slate-400 bg-slate-50/85 px-1 py-0.5 rounded'}">
                                                 ${p.stock <= 0 ? (state.lang === 'ru' ? 'Нет' : 'Yo\'q') : `${p.stock} ${t('pcs')}`}
                                             </div>
-                                            <div class="text-accent font-black text-xs sm:text-sm lg:text-base">${formatPrice(p.salePrice)}</div>
+                                            <div class="text-accent font-black text-xs sm:text-sm">${formatPrice(p.salePrice)}</div>
                                         </div>
                                     </button>
                                 `;
@@ -1132,7 +1147,7 @@
                     </div>
 
                     <!-- RIGHT: CART ASIDE (Independent Scroll + Pinned Footer) -->
-                    <aside class="w-full sm:w-72 md:w-76 lg:w-84 xl:w-96 bg-white border border-slate-200 rounded-2xl sm:rounded-3xl flex flex-col shadow-lg h-full max-h-full min-h-0 overflow-hidden no-print flex-shrink-0 kassa-cart-aside ${!isMobileCartActive ? 'hidden sm:flex' : 'flex'}">
+                    <aside class="w-full sm:w-80 md:w-96 lg:w-[380px] xl:w-[420px] bg-white border border-slate-200 rounded-2xl sm:rounded-3xl flex flex-col shadow-lg h-full max-h-full min-h-0 overflow-hidden no-print flex-shrink-0 kassa-cart-aside ${!isMobileCartActive ? 'hidden sm:flex' : 'flex'}">
                         <!-- Pinned Cart Header -->
                         <div class="p-2.5 sm:p-4 border-b flex justify-between items-center bg-slate-50/70 flex-shrink-0 kassa-cart-header">
                             <h3 class="font-black text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 text-slate-700">
@@ -2467,11 +2482,11 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
-                        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-8 min-h-[170px] h-[clamp(170px,30vh,300px)] flex flex-col shadow-sm dashboard-chart-card">
+                        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-8 min-h-[300px] h-[320px] flex flex-col shadow-sm dashboard-chart-card">
                             <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 flex items-center gap-1.5"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-accent"></i> ${state.lang === 'ru' ? 'График продаж' : 'Sotuvlar grafigi'}${state.dashboard.filter === 'week' ? ` (W${getWeekNumber(Date.now())})` : ''}</h3>
                             <div class="flex-1 min-h-0 relative"><canvas id="barChart"></canvas></div>
                         </div>
-                        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-4 min-h-[170px] h-[clamp(170px,30vh,300px)] flex flex-col shadow-sm dashboard-chart-card">
+                        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-4 min-h-[300px] h-[320px] flex flex-col shadow-sm dashboard-chart-card">
                             <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 flex items-center gap-1.5"><i data-lucide="pie-chart" class="w-3.5 h-3.5 text-accent"></i> ${state.lang === 'ru' ? 'Способы оплаты' : 'To\'lov turlari'}</h3>
                             <div class="flex-1 min-h-0 relative flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
                         </div>
