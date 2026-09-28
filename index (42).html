@@ -108,6 +108,12 @@
             background-color: #F8FAFC;
         }
 
+        /* Kassa product grid: prevent vertical stretch on few items */
+        .kassa-product-grid {
+            align-content: start;
+            grid-auto-rows: max-content;
+        }
+
         /* Tablet Zoom Pill Controller (hidden on desktop) */
         .tab-zoom-pill {
             display: none;
@@ -140,6 +146,8 @@
 
             .kassa-product-grid {
                 grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+                align-content: start !important;
+                grid-auto-rows: max-content !important;
                 gap: 0.625rem !important;
             }
 
@@ -1113,18 +1121,18 @@
                         </div>
 
                         <!-- Product Cards Grid with internal independent scroll (4 columns) -->
-                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-2.5 overflow-y-auto custom-scrollbar flex-1 min-h-0 pb-2 no-print touch-pan-y kassa-product-grid">
+                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-2.5 overflow-y-auto custom-scrollbar flex-1 min-h-0 pb-2 no-print touch-pan-y content-start auto-rows-max kassa-product-grid">
                             ${kassaProducts.map(p => {
                                 const isVisible = p.name.toLowerCase().includes(searchQuery);
                                 return `
-                                    <button onclick="addToOrder('${p.id}')" data-name="${p.name.toLowerCase()}" class="product-card bg-white p-2 sm:p-2.5 rounded-xl border-2 ${p.stock <= 0 ? 'border-dashed border-red-300 opacity-60 bg-red-50/10 cursor-not-allowed shadow-none' : p.stock <= 3 ? 'border-red-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all active:scale-95 text-left flex flex-col justify-between ${isVisible ? '' : 'hidden'} focus:outline-none focus:ring-0 select-none min-h-[175px] sm:min-h-[190px] touch-manipulation">
+                                    <button onclick="addToOrder('${p.id}')" data-name="${p.name.toLowerCase()}" class="product-card bg-white p-2 sm:p-2.5 rounded-xl border-2 ${p.stock <= 0 ? 'border-dashed border-red-300 opacity-60 bg-red-50/10 cursor-not-allowed shadow-none' : p.stock <= 3 ? 'border-red-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all active:scale-95 text-left flex flex-col justify-between ${isVisible ? '' : 'hidden'} focus:outline-none focus:ring-0 select-none touch-manipulation">
                                         <div class="w-full">
-                                            <div class="w-full aspect-[4/3] rounded-lg shadow-inner bg-slate-50 mb-1.5 sm:mb-2 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0 min-h-[90px] sm:min-h-[105px]">
-                                                ${p.photoUrl ? `<img src="${p.photoUrl}" class="w-full h-full object-cover">` : '📦'}
+                                            <div class="w-full aspect-[3/4] max-h-[175px] sm:max-h-[195px] rounded-lg shadow-inner bg-slate-50 mb-1.5 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0">
+                                                ${p.photoUrl ? `<img src="${p.photoUrl}" class="w-full h-full object-contain p-1">` : '📦'}
                                             </div>
-                                            <h3 class="font-bold text-xs sm:text-[13px] line-clamp-2 text-slate-800 leading-snug mb-0.5" title="${p.name}">${p.name}</h3>
+                                            <h3 class="font-bold text-xs sm:text-[13px] line-clamp-1 text-slate-800 leading-snug mb-1" title="${p.name}">${p.name}</h3>
                                         </div>
-                                        <div class="flex justify-between items-center w-full mt-1.5 pt-1.5 border-t border-slate-100">
+                                        <div class="flex justify-between items-center w-full pt-1.5 border-t border-slate-100">
                                             <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${p.stock <= 0 ? 'text-red-600 bg-red-50/50 px-1 py-0.5 rounded' : p.stock <= 3 ? 'text-red-500 bg-red-50/20 px-1 py-0.5 rounded' : 'text-slate-400 bg-slate-50/85 px-1 py-0.5 rounded'}">
                                                 ${p.stock <= 0 ? (state.lang === 'ru' ? 'Нет' : 'Yo\'q') : `${p.stock} ${t('pcs')}`}
                                             </div>
