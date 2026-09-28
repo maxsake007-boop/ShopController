@@ -115,9 +115,18 @@
 
         /* Tablet Landscape Adaptation Rule (960x280–446 Viewport) */
         @media (max-width: 1024px) and (max-height: 550px) {
+            :root {
+                font-size: calc(16px * var(--tablet-zoom, 0.85)) !important;
+            }
+
             html,
             body {
-                zoom: var(--tablet-zoom, 0.85);
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                min-height: 100% !important;
+                zoom: normal !important;
                 -webkit-text-size-adjust: 100%;
             }
 
@@ -196,10 +205,10 @@
                 const saved = localStorage.getItem(TABLET_ZOOM_KEY);
                 if (saved) {
                     const parsed = parseFloat(saved);
-                    if (parsed >= 0.4 && parsed <= 1.0) return Math.round(parsed * 100) / 100;
+                    if (parsed >= 0.5 && parsed <= 1.0) return Math.round(parsed * 100) / 100;
                 }
             } catch (e) {}
-            return 0.85; // Default 85% per Rule 2
+            return 0.85; // Default 85%
         })();
 
         const applyTabletZoom = () => {
@@ -211,18 +220,20 @@
 
             if (isTabletLandscape) {
                 document.documentElement.style.setProperty('--tablet-zoom', String(tabletZoomLevel));
-                document.body.style.zoom = String(tabletZoomLevel);
-                document.documentElement.style.zoom = String(tabletZoomLevel);
+                document.documentElement.style.fontSize = `${16 * tabletZoomLevel}px`;
+                document.documentElement.style.zoom = '';
+                document.body.style.zoom = '';
             } else {
                 document.documentElement.style.removeProperty('--tablet-zoom');
-                document.body.style.zoom = '';
+                document.documentElement.style.fontSize = '';
                 document.documentElement.style.zoom = '';
+                document.body.style.zoom = '';
             }
         };
 
         window.changeTabletZoom = (delta) => {
             let next = Math.round((tabletZoomLevel + delta) * 100) / 100;
-            if (next < 0.4) next = 0.4;
+            if (next < 0.5) next = 0.5;
             if (next > 1.0) next = 1.0;
             tabletZoomLevel = next;
             try {
