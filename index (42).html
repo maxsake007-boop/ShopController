@@ -115,18 +115,22 @@
 
         /* Tablet Landscape Adaptation Rule (960x280–446 Viewport) */
         @media (max-width: 1024px) and (max-height: 550px) {
-            :root {
-                font-size: calc(16px * var(--tablet-zoom, 0.85)) !important;
+            html {
+                zoom: normal !important;
+                font-size: 16px !important;
+                width: 100% !important;
+                height: 100% !important;
+                overflow: hidden !important;
             }
 
-            html,
             body {
-                width: 100% !important;
-                max-width: 100% !important;
-                height: 100% !important;
-                max-height: 100% !important;
-                min-height: 100% !important;
-                zoom: normal !important;
+                zoom: var(--tablet-zoom, 0.85) !important;
+                width: calc(100vw / var(--tablet-zoom, 0.85)) !important;
+                max-width: calc(100vw / var(--tablet-zoom, 0.85)) !important;
+                height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
+                min-height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
+                max-height: calc(100dvh / var(--tablet-zoom, 0.85)) !important;
+                overflow: hidden !important;
                 -webkit-text-size-adjust: 100%;
             }
 
@@ -220,14 +224,22 @@
 
             if (isTabletLandscape) {
                 document.documentElement.style.setProperty('--tablet-zoom', String(tabletZoomLevel));
-                document.documentElement.style.fontSize = `${16 * tabletZoomLevel}px`;
-                document.documentElement.style.zoom = '';
-                document.body.style.zoom = '';
+                document.documentElement.style.fontSize = '';
+                document.body.style.zoom = String(tabletZoomLevel);
+                document.body.style.width = `calc(100vw / ${tabletZoomLevel})`;
+                document.body.style.maxWidth = `calc(100vw / ${tabletZoomLevel})`;
+                document.body.style.height = `calc(100dvh / ${tabletZoomLevel})`;
+                document.body.style.minHeight = `calc(100dvh / ${tabletZoomLevel})`;
+                document.body.style.maxHeight = `calc(100dvh / ${tabletZoomLevel})`;
             } else {
                 document.documentElement.style.removeProperty('--tablet-zoom');
                 document.documentElement.style.fontSize = '';
-                document.documentElement.style.zoom = '';
                 document.body.style.zoom = '';
+                document.body.style.width = '';
+                document.body.style.maxWidth = '';
+                document.body.style.height = '';
+                document.body.style.minHeight = '';
+                document.body.style.maxHeight = '';
             }
         };
 
