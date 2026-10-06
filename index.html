@@ -47,13 +47,18 @@
             overflow: hidden !important;
         }
 
-        .no-print { @apply block; }
+        .no-print { display: block; }
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
             body.printing-report #app-main-area,
             body.printing-report nav,
             body.printing-report header,
+            body.printing-report #toast-container,
+            body.printing-report #modal-container,
+            body.printing-report #scanner-modal-container,
+            body.printing-report .mobile-nav,
+            body.printing-report .app-sidebar,
             body.printing-report > :not(#temp-monthly-pdf-report) {
                 display: none !important;
             }
@@ -72,9 +77,36 @@
                 zoom: 1 !important;
                 transform: none !important;
                 background: #F8F9FA !important;
+                color: #0f172a !important;
                 position: static !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+            }
+            #temp-monthly-pdf-report {
+                display: block !important;
+                position: static !important;
+                inset: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: 0 !important;
+                max-height: none !important;
+                overflow: visible !important;
+                background: #F8F9FA !important;
+                color: #0f172a !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-sizing: border-box !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            #temp-monthly-pdf-report .report-paper-content {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                max-width: 100% !important;
+                background: transparent !important;
             }
         }
 
@@ -232,7 +264,7 @@
         </header>
 
         <!-- Dynamic Content -->
-        <main class="flex-1 overflow-y-auto p-2.5 sm:p-3.5 md:p-4 lg:p-6 pb-16 md:pb-6 custom-scrollbar touch-pan-y min-h-0" id="main-content">
+        <main class="flex-1 overflow-y-auto p-2.5 sm:p-3.5 md:p-4 lg:p-6 pb-28 md:pb-8 custom-scrollbar touch-pan-y min-h-0" id="main-content">
             <!-- Content injection here -->
         </main>
     </div>
@@ -1098,7 +1130,7 @@
                 main.className = "flex-1 overflow-hidden p-1.5 sm:p-2.5 md:p-3.5 custom-scrollbar touch-pan-y flex flex-col min-h-0";
                 main.innerHTML = renderKassa();
             } else {
-                main.className = "flex-1 overflow-y-auto p-2.5 sm:p-3.5 md:p-4 lg:p-6 pb-16 md:pb-6 custom-scrollbar touch-pan-y min-h-0";
+                main.className = "flex-1 overflow-y-auto p-2.5 sm:p-3.5 md:p-4 lg:p-6 pb-28 md:pb-8 custom-scrollbar touch-pan-y min-h-0";
                 if (tabId === 'sklad') main.innerHTML = renderSklad();
                 else if (tabId === 'dolgi') main.innerHTML = renderDolgi();
                 else if (tabId === 'report') main.innerHTML = renderReport();
@@ -1414,13 +1446,13 @@
 
         // SKLAD
         const renderSklad = () => `
-            <div class="space-y-2.5 sm:space-y-4 pb-20 md:pb-8">
+            <div class="space-y-2.5 sm:space-y-4 pb-32 sm:pb-28 md:pb-16">
                 <div class="flex justify-between items-center gap-2">
                     <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2"><i data-lucide="package" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('sklad')}</h2>
                     <button onclick="toggleAddForm(true)" class="min-h-[36px] sm:min-h-[40px] bg-accent text-white px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-1.5 hover:bg-orange-600 active:scale-95 transition-all text-[11px] sm:text-xs uppercase tracking-widest shadow-sm"><i data-lucide="plus" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ${t('add_product')}</button>
                 </div>
                 <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm overflow-hidden text-xs sm:text-sm">
-                    <div class="overflow-x-auto custom-scrollbar touch-pan-x">
+                    <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left font-sans min-w-[540px]">
                             <thead class="sticky top-0 z-10 bg-slate-50 border-b text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-widest shadow-sm">
                                 <tr>
@@ -2851,21 +2883,21 @@
         `;
 
         const getPeriodStats = (start, end) => {
-            const closedDeals = getClosedDeals(start, end);
-            const totalClosed = closedDeals.reduce((sum, s) => sum + s.total, 0);
+            const closedDeals = getClosedDeals(start, end) || [];
+            const totalClosed = closedDeals.reduce((sum, s) => sum + (s.total || 0), 0);
 
             let profit = 0;
             closedDeals.forEach(sale => {
-                sale.items.forEach(item => {
-                    const product = state.products.find(p => String(p.id) === String(item.productId));
+                (sale.items || []).forEach(item => {
+                    const product = (state.products || []).find(p => String(p.id) === String(item.productId));
                     if (product) {
-                        profit += (item.price - product.purchasePrice) * item.qty;
+                        profit += ((item.price || 0) - (product.purchasePrice || 0)) * (item.qty || 1);
                     }
                 });
             });
 
-            const filteredExpenses = state.expenses.filter(e => e.timestamp >= start && e.timestamp <= end);
-            const totalExpenses = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+            const filteredExpenses = (state.expenses || []).filter(e => e.timestamp >= start && e.timestamp <= end);
+            const totalExpenses = filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
 
             return {
                 revenue: totalClosed,
@@ -2878,441 +2910,394 @@
             };
         };
 
-        window.printPdfReport = (periodType) => {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
+        window.closePdfReport = () => {
+            document.body.classList.remove('printing-report');
+            const c = document.getElementById('temp-monthly-pdf-report');
+            if (c) c.remove();
+        };
 
-            let startTime, endTime, titleLabel, fileSuffix;
-
-            const ruMonthsNominative = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-            const uzMonthsNominative = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
-
-            if (periodType === 'month') {
-                startTime = new Date(year, month, 1).getTime();
-                endTime = new Date(year, month + 1, 0, 23, 59, 59, 999).getTime();
-                const monthName = state.lang === 'ru' ? ruMonthsNominative[month] : uzMonthsNominative[month];
-                titleLabel = `${monthName} ${year}`;
-                fileSuffix = `${monthName}_${year}`;
-            } else if (periodType === 'quarter') {
-                const quarter = Math.floor(month / 3); // 0, 1, 2, 3
-                const startQuarterMonth = quarter * 3;
-                startTime = new Date(year, startQuarterMonth, 1).getTime();
-                endTime = new Date(year, startQuarterMonth + 3, 0, 23, 59, 59, 999).getTime();
-                titleLabel = state.lang === 'ru' ? `${quarter + 1}-й Квартал ${year}` : `${quarter + 1}-kvartal ${year}`;
-                fileSuffix = `${quarter + 1}_kvartal_${year}`;
-            } else { // year
-                startTime = new Date(year, 0, 1).getTime();
-                endTime = new Date(year, 11, 31, 23, 59, 59, 999).getTime();
-                titleLabel = state.lang === 'ru' ? `${year} Год` : `${year}-yil`;
-                fileSuffix = `god_${year}`;
+        window.triggerPrintFromReport = () => {
+            document.body.classList.add('printing-report');
+            try {
+                window.print();
+            } catch (err) {
+                console.error('Print failed:', err);
             }
+        };
 
-            const stats = getPeriodStats(startTime, endTime);
-            const periodExpenses = stats.expenses;
-            const closedDeals = stats.closedDeals;
-            const totalClosed = stats.revenue;
-            const totalExpenses = stats.totalExpenses;
+        window.printPdfReport = (periodType) => {
+            try {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth();
 
-            // Group deals by exact timestamp to group multiple items from the same checkout as a single deal
-            const groupDealsByExactTimestamp = (deals) => {
-                const timestampGroups = {};
-                deals.forEach(deal => {
-                    const isPmt = deal.id.toString().startsWith('pmt-');
-                    if (!isPmt) {
-                        const key = String(deal.timestamp);
-                        if (!timestampGroups[key]) {
-                            timestampGroups[key] = [];
-                        }
-                        timestampGroups[key].push(deal);
-                    }
-                });
+                let startTime, endTime, titleLabel, fileSuffix;
 
-                const result = [];
-                const processedKeys = new Set();
+                const ruMonthsNominative = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+                const uzMonthsNominative = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
 
-                deals.forEach(deal => {
-                    const isPmt = deal.id.toString().startsWith('pmt-');
-                    if (isPmt) {
-                        result.push({ isGroup: false, sale: deal, timestamp: deal.timestamp });
-                    } else {
-                        const key = String(deal.timestamp);
-                        const group = timestampGroups[key];
-                        if (group.length > 1) {
-                            if (!processedKeys.has(key)) {
-                                processedKeys.add(key);
-                                result.push({
-                                    isGroup: true,
-                                    key: key,
-                                    timestamp: group[0].timestamp,
-                                    sales: group,
-                                    total: group.reduce((sum, s) => sum + s.total, 0)
-                                });
+                if (periodType === 'month') {
+                    startTime = new Date(year, month, 1).getTime();
+                    endTime = new Date(year, month + 1, 0, 23, 59, 59, 999).getTime();
+                    const monthName = state.lang === 'ru' ? ruMonthsNominative[month] : uzMonthsNominative[month];
+                    titleLabel = `${monthName} ${year}`;
+                    fileSuffix = `${monthName}_${year}`;
+                } else if (periodType === 'quarter') {
+                    const quarter = Math.floor(month / 3);
+                    const startQuarterMonth = quarter * 3;
+                    startTime = new Date(year, startQuarterMonth, 1).getTime();
+                    endTime = new Date(year, startQuarterMonth + 3, 0, 23, 59, 59, 999).getTime();
+                    titleLabel = state.lang === 'ru' ? `${quarter + 1}-й Квартал ${year}` : `${quarter + 1}-kvartal ${year}`;
+                    fileSuffix = `${quarter + 1}_kvartal_${year}`;
+                } else {
+                    startTime = new Date(year, 0, 1).getTime();
+                    endTime = new Date(year, 11, 31, 23, 59, 59, 999).getTime();
+                    titleLabel = state.lang === 'ru' ? `${year} Год` : `${year}-yil`;
+                    fileSuffix = `god_${year}`;
+                }
+
+                const stats = getPeriodStats(startTime, endTime);
+                const periodExpenses = stats.expenses || [];
+                const closedDeals = stats.closedDeals || [];
+                const totalClosed = stats.revenue || 0;
+                const totalExpenses = stats.totalExpenses || 0;
+
+                const groupDealsByExactTimestamp = (deals) => {
+                    const timestampGroups = {};
+                    deals.forEach(deal => {
+                        if (!deal) return;
+                        const isPmt = deal.id ? String(deal.id).startsWith('pmt-') : false;
+                        if (!isPmt && deal.timestamp) {
+                            const key = String(deal.timestamp);
+                            if (!timestampGroups[key]) {
+                                timestampGroups[key] = [];
                             }
-                        } else {
-                            result.push({ isGroup: false, sale: deal, timestamp: deal.timestamp });
+                            timestampGroups[key].push(deal);
                         }
-                    }
-                });
+                    });
 
-                return result;
-            };
+                    const result = [];
+                    const processedKeys = new Set();
 
-            const printDisplayItems = groupDealsByExactTimestamp(closedDeals);
+                    deals.forEach(deal => {
+                        if (!deal) return;
+                        const isPmt = deal.id ? String(deal.id).startsWith('pmt-') : false;
+                        if (isPmt) {
+                            result.push({ isGroup: false, sale: deal, timestamp: deal.timestamp });
+                        } else {
+                            const key = String(deal.timestamp);
+                            const group = timestampGroups[key];
+                            if (group && group.length > 1) {
+                                if (!processedKeys.has(key)) {
+                                    processedKeys.add(key);
+                                    result.push({
+                                        isGroup: true,
+                                        key: key,
+                                        timestamp: group[0].timestamp,
+                                        sales: group,
+                                        total: group.reduce((sum, s) => sum + (s.total || 0), 0)
+                                    });
+                                }
+                            } else {
+                                result.push({ isGroup: false, sale: deal, timestamp: deal.timestamp });
+                            }
+                        }
+                    });
 
-            const formatFriendlyDate = (ts) => {
-                const d = new Date(ts);
-                const day = d.getDate();
-                const ruMonthsGenitive = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
-                const uzMonthsGenitive = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
-                const monthName = state.lang === 'ru' ? ruMonthsGenitive[d.getMonth()] : uzMonthsGenitive[d.getMonth()];
-                return `${day} ${monthName} ${d.getFullYear()}`;
-            };
+                    return result;
+                };
 
-            const printContainer = document.createElement('div');
-            printContainer.id = 'temp-monthly-pdf-report';
-            printContainer.className = 'fixed inset-0 bg-[#F8F9FA] z-[9999] p-8 text-black hidden print:block overflow-y-auto';
-            
-            let lastMonthKey = null;
+                const printDisplayItems = groupDealsByExactTimestamp(closedDeals);
 
-            printContainer.innerHTML = `
-                <div class="max-w-4xl mx-auto" style="font-family: 'Inter', sans-serif; color: #0f172a !important;">
-                    <!-- Report Header -->
-                    <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 text-center mb-8 shadow-sm">
-                        <div class="flex items-center justify-center gap-2.5 mb-2">
-                            <div class="w-10 h-10 bg-orange-100 text-accent rounded-2xl flex items-center justify-center">
-                                <i data-lucide="store" class="w-5 h-5 text-accent"></i>
-                            </div>
-                            <h1 class="text-2xl font-black uppercase tracking-tight text-slate-800 italic">${state.settings.appName}</h1>
-                        </div>
-                        <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mt-1">
-                            ${state.lang === 'ru' ? 'Отчёт по продажам и личным расходам' : 'Sotuvlar va shaxsiy xarajatlar hisoboti'}
-                        </h2>
-                        <h3 class="text-lg font-black mt-3 text-slate-800 uppercase tracking-wide">${titleLabel}</h3>
-                        <div class="text-[9.5px] text-gray-400 mt-2.5 uppercase tracking-widest font-black flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 px-4 rounded-xl w-max mx-auto border border-slate-100">
-                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
-                            ${state.lang === 'ru' ? 'Сформировано' : 'Yaratilgan vaqt'}: ${new Date().toLocaleString(state.lang === 'ru' ? 'ru-RU' : 'uz-UZ')}
-                        </div>
+                const formatFriendlyDate = (ts) => {
+                    if (!ts) return '';
+                    const d = new Date(ts);
+                    const day = d.getDate();
+                    const ruMonthsGenitive = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
+                    const uzMonthsGenitive = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+                    const monthName = state.lang === 'ru' ? ruMonthsGenitive[d.getMonth()] : uzMonthsGenitive[d.getMonth()];
+                    return `${day} ${monthName} ${d.getFullYear()}`;
+                };
+
+                let printContainer = document.getElementById('temp-monthly-pdf-report');
+                if (!printContainer) {
+                    printContainer = document.createElement('div');
+                    printContainer.id = 'temp-monthly-pdf-report';
+                    document.body.appendChild(printContainer);
+                }
+                
+                printContainer.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] overflow-y-auto custom-scrollbar flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 text-slate-900';
+                
+                let lastMonthKey = null;
+
+                printContainer.innerHTML = `
+                    <!-- Screen Action Toolbar (Hidden in Print) -->
+                    <div class="w-full max-w-4xl flex items-center justify-between pb-3 pt-1 no-print gap-2 flex-shrink-0">
+                        <button onclick="closePdfReport()" class="px-3.5 sm:px-4 py-2 bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all min-h-[38px] cursor-pointer">
+                            <i data-lucide="arrow-left" class="w-4 h-4 text-slate-500"></i>
+                            <span>${state.lang === 'ru' ? 'Назад в настройки' : 'Sozlamalarga qaytish'}</span>
+                        </button>
+                        <button onclick="triggerPrintFromReport()" class="px-4 sm:px-5 py-2.5 bg-accent hover:bg-orange-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-orange-500/30 transition-all min-h-[42px] cursor-pointer">
+                            <i data-lucide="printer" class="w-4 h-4"></i>
+                            <span>${state.lang === 'ru' ? 'Распечатать / PDF' : 'Chop etish / PDF'}</span>
+                        </button>
                     </div>
-                    
-                    <!-- Stats Section (Locked 4-Column Grid) -->
-                    <div class="grid grid-cols-4 gap-4 mb-8" style="display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 16px !important; margin-bottom: 28px !important;">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between text-left" style="background-color: #ffffff !important; border-color: #e2e8f0 !important; min-height: 96px !important; height: 96px !important; padding: 18px 20px !important; box-sizing: border-box !important;">
-                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">${t('revenue')}</div>
-                            <div class="text-base md:text-lg font-black text-slate-900 leading-none">${formatPrice(totalClosed)}</div>
-                        </div>
-                        <div class="p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(236, 253, 245, 0.6) !important; border-color: #a7f3d0 !important; min-height: 96px !important; height: 96px !important; padding: 18px 20px !important; box-sizing: border-box !important;">
-                             <div class="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none mb-1">${t('profit')} 🎉</div>
-                             <div class="text-base md:text-lg font-black text-emerald-800 leading-none">${formatPrice(stats.profit)}</div>
-                        </div>
-                        <div class="p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(254, 242, 242, 0.6) !important; border-color: #fecaca !important; min-height: 96px !important; height: 96px !important; padding: 18px 20px !important; box-sizing: border-box !important;">
-                             <div class="text-[10px] font-black text-red-600 uppercase tracking-widest leading-none mb-1">${t('personal_expenses')} 💸</div>
-                             <div class="text-base md:text-lg font-black text-red-800 leading-none">${formatPrice(totalExpenses)}</div>
-                        </div>
-                        <div class="p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(238, 242, 255, 0.6) !important; border-color: #c7d2fe !important; min-height: 96px !important; height: 96px !important; padding: 18px 20px !important; box-sizing: border-box !important;">
-                             <div class="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none mb-1">${state.lang === 'ru' ? 'Чистыми 💰' : 'Sof foyda 💰'}</div>
-                             <div class="text-base md:text-lg font-black text-indigo-850 leading-none">${formatPrice(stats.netProfit)}</div>
-                        </div>
-                    </div>
 
-                    <!-- Transactions Section -->
-                    <div class="space-y-4 mb-8 text-left">
-                        <h3 class="text-sm font-black uppercase italic text-slate-500 flex items-center gap-2 ml-1">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-accent"></i> ${t('transactions')}
-                        </h3>
-                        <div class="space-y-4">
-                            <!-- Headers for Perfect Align (Always visible) -->
-                            <div class="grid grid-cols-12 gap-6 bg-slate-50 border border-slate-200/80 rounded-2xl px-6 py-3.5 text-[10.5px] font-black uppercase text-slate-400 tracking-widest items-center" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important;">
-                                <div class="col-span-2" style="grid-column: span 2 / span 2 !important;">${state.lang === 'ru' ? 'ВРЕМЯ' : 'VAQT'}</div>
-                                <div class="col-span-5" style="grid-column: span 5 / span 5 !important;">${state.lang === 'ru' ? 'ТОВАРЫ' : 'MAHSULOTLAR'}</div>
-                                <div class="col-span-2 text-center" style="grid-column: span 2 / span 2 !important; text-align: center !important;">${state.lang === 'ru' ? 'СТАТУС' : 'HOLAT'}</div>
-                                <div class="col-span-3 text-right" style="grid-column: span 3 / span 3 !important; text-align: right !important;">${state.lang === 'ru' ? 'ИТОГ' : 'SUMMA'}</div>
+                    <!-- Printable Paper Report -->
+                    <div class="w-full max-w-4xl bg-[#F8F9FA] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl border border-slate-200/80 mb-10 report-paper-content flex-shrink-0" style="font-family: 'Inter', sans-serif; color: #0f172a !important;">
+                        <!-- Report Header -->
+                        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 text-center mb-6 sm:mb-8 shadow-sm">
+                            <div class="flex items-center justify-center gap-2.5 mb-2">
+                                <div class="w-10 h-10 bg-orange-100 text-accent rounded-2xl flex items-center justify-center">
+                                    <i data-lucide="store" class="w-5 h-5 text-accent"></i>
+                                </div>
+                                <h1 class="text-2xl font-black uppercase tracking-tight text-slate-800 italic">${state.settings.appName || 'МАГАЗИН'}</h1>
                             </div>
+                            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mt-1">
+                                ${state.lang === 'ru' ? 'Отчёт по продажам и личным расходам' : 'Sotuvlar va shaxsiy xarajatlar hisoboti'}
+                            </h2>
+                            <h3 class="text-lg font-black mt-3 text-slate-800 uppercase tracking-wide">${titleLabel}</h3>
+                            <div class="text-[9.5px] text-gray-400 mt-2.5 uppercase tracking-widest font-black flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 px-4 rounded-xl w-max mx-auto border border-slate-100">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+                                ${state.lang === 'ru' ? 'Сформировано' : 'Yaratilgan vaqt'}: ${new Date().toLocaleString(state.lang === 'ru' ? 'ru-RU' : 'uz-UZ')}
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Section (Locked 4-Column Grid) -->
+                        <div class="grid grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8" style="display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 14px !important; margin-bottom: 26px !important; page-break-inside: avoid !important; break-inside: avoid !important;">
+                            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between text-left" style="background-color: #ffffff !important; border-color: #e2e8f0 !important; min-height: 90px !important; height: 90px !important; padding: 14px 18px !important; box-sizing: border-box !important;">
+                                <div class="text-[9.5px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">${t('revenue')}</div>
+                                <div class="text-sm sm:text-base md:text-lg font-black text-slate-900 leading-none">${formatPrice(totalClosed)}</div>
+                            </div>
+                            <div class="p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(236, 253, 245, 0.7) !important; border-color: #a7f3d0 !important; min-height: 90px !important; height: 90px !important; padding: 14px 18px !important; box-sizing: border-box !important;">
+                                 <div class="text-[9.5px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none mb-1">${t('profit')} 🎉</div>
+                                 <div class="text-sm sm:text-base md:text-lg font-black text-emerald-800 leading-none">${formatPrice(stats.profit)}</div>
+                            </div>
+                            <div class="p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(254, 242, 242, 0.7) !important; border-color: #fecaca !important; min-height: 90px !important; height: 90px !important; padding: 14px 18px !important; box-sizing: border-box !important;">
+                                 <div class="text-[9.5px] sm:text-[10px] font-black text-red-600 uppercase tracking-widest leading-none mb-1">${t('personal_expenses')} 💸</div>
+                                 <div class="text-sm sm:text-base md:text-lg font-black text-red-800 leading-none">${formatPrice(totalExpenses)}</div>
+                            </div>
+                            <div class="p-4 sm:p-5 rounded-2xl border shadow-sm flex flex-col justify-between text-left" style="background-color: rgba(238, 242, 255, 0.7) !important; border-color: #c7d2fe !important; min-height: 90px !important; height: 90px !important; padding: 14px 18px !important; box-sizing: border-box !important;">
+                                 <div class="text-[9.5px] sm:text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none mb-1">${state.lang === 'ru' ? 'Чистыми 💰' : 'Sof foyda 💰'}</div>
+                                 <div class="text-sm sm:text-base md:text-lg font-black text-indigo-850 leading-none">${formatPrice(stats.netProfit)}</div>
+                            </div>
+                        </div>
 
-                            <div class="space-y-3">
-                                ${printDisplayItems.map(item => {
-                                    const dItem = new Date(item.timestamp);
-                                    const monthKey = `${dItem.getFullYear()}-${dItem.getMonth()}`;
-                                    let monthHeadingHtml = "";
-                                    
-                                    if (monthKey !== lastMonthKey) {
-                                        lastMonthKey = monthKey;
-                                        const mName = state.lang === 'ru' ? ruMonthsNominative[dItem.getMonth()] : uzMonthsNominative[dItem.getMonth()];
-                                        monthHeadingHtml = `
-                                            <div class="col-span-full pt-6 pb-2 text-left" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                                <div class="flex items-center gap-3">
-                                                    <span class="text-xs font-black uppercase text-accent tracking-widest bg-orange-50 border border-orange-100 px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-sm">
-                                                        <i class="w-4 h-4 text-accent" data-lucide="calendar"></i>
-                                                        ${mName} ${dItem.getFullYear()}
-                                                    </span>
-                                                    <div class="h-[1px] bg-slate-150 flex-1"></div>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }
+                        <!-- Transactions Section -->
+                        <div class="space-y-4 mb-8 text-left">
+                            <h3 class="text-sm font-black uppercase italic text-slate-500 flex items-center gap-2 ml-1">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-accent"></i> ${t('transactions')}
+                            </h3>
+                            <div class="space-y-4">
+                                <!-- Headers for Perfect Align -->
+                                <div class="grid grid-cols-12 gap-6 bg-slate-50 border border-slate-200/80 rounded-2xl px-6 py-3.5 text-[10.5px] font-black uppercase text-slate-400 tracking-widest items-center" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important;">
+                                    <div class="col-span-2" style="grid-column: span 2 / span 2 !important;">${state.lang === 'ru' ? 'ВРЕМЯ' : 'VAQT'}</div>
+                                    <div class="col-span-5" style="grid-column: span 5 / span 5 !important;">${state.lang === 'ru' ? 'ТОВАРЫ' : 'MAHSULOTLAR'}</div>
+                                    <div class="col-span-2 text-center" style="grid-column: span 2 / span 2 !important; text-align: center !important;">${state.lang === 'ru' ? 'СТАТУС' : 'HOLAT'}</div>
+                                    <div class="col-span-3 text-right" style="grid-column: span 3 / span 3 !important; text-align: right !important;">${state.lang === 'ru' ? 'ИТОГ' : 'SUMMA'}</div>
+                                </div>
 
-                                    let itemHtml = "";
-                                    if (item.isGroup) {
-                                        itemHtml = `
-                                        <div class="bg-white p-5 rounded-3xl border border-slate-200 border-l-4 border-l-orange-500 shadow-sm flex flex-col gap-4 relative overflow-hidden bg-white mb-4 text-left" style="page-break-inside: avoid !important; break-inside: avoid !important; border-left: 4px solid #f97316 !important;">
-                                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                                                <div class="flex items-center gap-3">
-                                                    <span class="font-bold text-slate-705 text-sm">${formatFriendlyDate(item.timestamp)}</span>
-                                                    <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-400 text-[10.5px] font-semibold py-0.5 px-2 rounded-lg">
-                                                        <i class="w-3.5 h-3.5 text-slate-350 mr-1" data-lucide="clock"></i>
-                                                        ${new Date(item.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-850 px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider">
-                                                        <i class="w-3.5 h-3.5 text-accent mr-1" data-lucide="shopping-bag"></i>
-                                                        ${state.lang === 'ru' ? 'В ОДНОМ ЧЕКЕ' : 'BIRGA'}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="divide-y divide-slate-100 space-y-3.5 font-bold">
-                                                ${item.sales.map((s, idx) => `
-                                                    <div class="${idx > 0 ? 'pt-3.5' : ''} grid grid-cols-12 gap-6 items-center" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important;">
-                                                        <div class="col-span-2" style="grid-column: span 2 / span 2 !important;"></div>
-                                                        <div class="col-span-5 w-full text-left flex flex-col gap-1" style="grid-column: span 5 / span 5 !important;">
-                                                            <div class="bg-slate-50/55 p-3 rounded-2xl border border-slate-100 flex flex-col gap-1.5 shadow-inner">
-                                                                ${s.items.map(i => `
-                                                                    <div class="flex justify-between items-center text-xs text-slate-755 gap-3">
-                                                                        <div class="font-semibold text-slate-850 flex items-center gap-1.5 min-w-0 font-medium">
-                                                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0 animate-pulse"></span>
-                                                                            <span class="truncate min-w-0" style="color: black !important;">${i.name}</span>
-                                                                            <span class="text-accent font-black bg-orange-50 px-1.5 py-0.5 rounded-md text-[9px] flex-shrink-0">x${i.qty}</span>
-                                                                        </div>
-                                                                        <span class="font-black text-slate-550 whitespace-nowrap">${formatPrice(i.price * i.qty)}</span>
-                                                                    </div>
-                                                                `).join('')}
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-span-2 flex justify-center" style="grid-column: span 2 / span 2 !important; display: flex !important; justify-content: center !important;">
-                                                            ${(() => {
-                                                                const colors = {
-                                                                    'cash': 'text-emerald-700 bg-emerald-50 border-emerald-150',
-                                                                    'card': 'text-blue-700 bg-blue-50 border-blue-150',
-                                                                    'debt': 'text-red-700 bg-red-50 border-red-150',
-                                                                    'Уплочен': 'text-amber-700 bg-amber-50 border-amber-150'
-                                                                };
-                                                                const labels = { 
-                                                                    'cash': (state.lang === 'ru' ? 'Наличные' : 'Naqd'), 
-                                                                    'card': (state.lang === 'ru' ? 'Карта' : 'Karta'), 
-                                                                    'debt': (state.lang === 'ru' ? 'Долг' : 'Qarz'), 
-                                                                    'Уплочен': (state.lang === 'ru' ? 'Погашен' : 'To\'langan') 
-                                                                };
-                                                                return `<span class="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 shadow-sm ${colors[s.paymentType] || 'text-slate-400'}">${labels[s.paymentType] || s.paymentType}</span>`;
-                                                            })()}
-                                                        </div>
-                                                        <div class="col-span-3 text-right" style="grid-column: span 3 / span 3 !important; text-align: right !important;">
-                                                            <span class="text-sm font-extrabold text-slate-900 leading-none">${formatPrice(s.total)}</span>
-                                                        </div>
+                                <div class="space-y-3">
+                                    ${printDisplayItems.map(item => {
+                                        const dItem = new Date(item.timestamp);
+                                        const monthKey = `${dItem.getFullYear()}-${dItem.getMonth()}`;
+                                        let monthHeadingHtml = "";
+                                        
+                                        if (monthKey !== lastMonthKey) {
+                                            lastMonthKey = monthKey;
+                                            const mName = state.lang === 'ru' ? ruMonthsNominative[dItem.getMonth()] : uzMonthsNominative[dItem.getMonth()];
+                                            monthHeadingHtml = `
+                                                <div class="col-span-full pt-6 pb-2 text-left" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                                    <div class="flex items-center gap-3">
+                                                        <span class="text-xs font-black uppercase text-accent tracking-widest bg-orange-50 border border-orange-100 px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-sm">
+                                                            <i class="w-4 h-4 text-accent" data-lucide="calendar"></i>
+                                                            ${mName} ${dItem.getFullYear()}
+                                                        </span>
+                                                        <div class="h-[1px] bg-slate-150 flex-1"></div>
                                                     </div>
-                                                `).join('')}
-                                            </div>
-
-                                            <div class="border-t border-slate-100 pt-3.5 flex justify-between items-center font-bold">
-                                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${state.lang === 'ru' ? 'ОБЩИЙ ИТОГ ЧЕКА' : 'CHEKNING UMUMIY JAMI'}</span>
-                                                <span class="text-base font-black text-slate-950 leading-none">${formatPrice(item.total)}</span>
-                                            </div>
-                                        </div>
-                                        `;
-                                    } else {
-                                        const s = item.sale;
-                                        itemHtml = `
-                                        <div class="bg-white p-5 rounded-3xl border border-slate-200 border-l-4 border-l-orange-500 shadow-sm grid grid-cols-12 gap-6 items-center relative mb-4 text-left" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important; page-break-inside: avoid !important; break-inside: avoid !important; border-left: 4px solid #f97316 !important;">
-                                            <div class="col-span-2 w-full text-left flex flex-col justify-center" style="grid-column: span 2 / span 2 !important;">
-                                                <div class="font-bold text-slate-705 text-sm">${formatFriendlyDate(s.displayTimestamp || s.timestamp)}</div>
-                                                <div class="text-[10.5px] font-semibold text-slate-400 mt-1 flex items-center gap-1">
-                                                    <i class="w-3.5 h-3.5 text-slate-350" data-lucide="clock"></i>
-                                                    ${new Date(s.displayTimestamp || s.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
                                                 </div>
-                                            </div>
+                                            `;
+                                        }
 
-                                            <div class="col-span-5 w-full text-left flex flex-col gap-1.5" style="grid-column: span 5 / span 5 !important;">
-                                                <div class="bg-slate-50/55 p-3.5 rounded-2xl border border-slate-100 flex flex-col gap-2 shadow-inner">
-                                                    ${s.items.length > 0 
-                                                        ? s.items.map(i => `
-                                                            <div class="flex justify-between items-center text-xs text-slate-755 gap-4 font-bold">
-                                                                <div class="font-semibold text-slate-850 flex items-center gap-1.5 min-w-0 font-medium">
-                                                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0 animate-pulse"></span>
-                                                                    <span class="truncate min-w-0" style="color: black !important;">${i.name}</span>
-                                                                    <span class="text-accent font-black bg-orange-50 px-1.5 py-0.5 rounded-md text-[9px] flex-shrink-0">x${i.qty}</span>
+                                        let itemHtml = "";
+                                        if (item.isGroup) {
+                                            itemHtml = `
+                                            <div class="bg-white p-5 rounded-3xl border border-slate-200 border-l-4 border-l-orange-500 shadow-sm flex flex-col gap-4 relative overflow-hidden bg-white mb-4 text-left" style="page-break-inside: avoid !important; break-inside: avoid !important; border-left: 4px solid #f97316 !important;">
+                                                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                                                    <div class="flex items-center gap-3">
+                                                        <span class="font-bold text-slate-705 text-sm">${formatFriendlyDate(item.timestamp)}</span>
+                                                        <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-400 text-[10.5px] font-semibold py-0.5 px-2 rounded-lg">
+                                                            <i class="w-3.5 h-3.5 text-slate-350 mr-1" data-lucide="clock"></i>
+                                                            ${new Date(item.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-850 px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider">
+                                                            <i class="w-3.5 h-3.5 text-accent mr-1" data-lucide="shopping-bag"></i>
+                                                            ${state.lang === 'ru' ? 'В ОДНОМ ЧЕКЕ' : 'BIRGA'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="divide-y divide-slate-100 space-y-3.5 font-bold">
+                                                    ${(item.sales || []).map((s, idx) => `
+                                                        <div class="${idx > 0 ? 'pt-3.5' : ''} grid grid-cols-12 gap-6 items-center" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important;">
+                                                            <div class="col-span-2" style="grid-column: span 2 / span 2 !important;"></div>
+                                                            <div class="col-span-5 w-full text-left flex flex-col gap-1" style="grid-column: span 5 / span 5 !important;">
+                                                                <div class="bg-slate-50/55 p-3 rounded-2xl border border-slate-100 flex flex-col gap-1.5 shadow-inner">
+                                                                    ${(s.items || []).map(i => `
+                                                                        <div class="flex justify-between items-center text-xs text-slate-755 gap-3">
+                                                                            <div class="font-semibold text-slate-850 flex items-center gap-1.5 min-w-0 font-medium">
+                                                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0 animate-pulse"></span>
+                                                                                <span class="truncate min-w-0" style="color: black !important;">${i.name}</span>
+                                                                                <span class="text-accent font-black bg-orange-50 px-1.5 py-0.5 rounded-md text-[9px] flex-shrink-0">x${i.qty || 1}</span>
+                                                                            </div>
+                                                                            <span class="font-black text-slate-550 whitespace-nowrap">${formatPrice((i.price || 0) * (i.qty || 1))}</span>
+                                                                        </div>
+                                                                    `).join('')}
                                                                 </div>
-                                                                <span class="font-black text-slate-550 whitespace-nowrap">${formatPrice(i.price * i.qty)}</span>
                                                             </div>
-                                                        `).join('')
-                                                        : `
-                                                            <div class="italic text-xs font-bold text-amber-550 flex items-center gap-1.5">
-                                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                                                                ${s.paymentType === 'Уплочен' ? (state.lang === 'ru' ? 'Оплата старого долга 💳' : 'Eski qarz to\'lovi 💳') : '—'}
+                                                            <div class="col-span-2 flex justify-center" style="grid-column: span 2 / span 2 !important; display: flex !important; justify-content: center !important;">
+                                                                ${(() => {
+                                                                    const colors = {
+                                                                        'cash': 'text-emerald-700 bg-emerald-50 border-emerald-150',
+                                                                        'card': 'text-blue-700 bg-blue-50 border-blue-150',
+                                                                        'debt': 'text-red-700 bg-red-50 border-red-150',
+                                                                        'Уплочен': 'text-amber-700 bg-amber-50 border-amber-150'
+                                                                    };
+                                                                    const labels = { 
+                                                                        'cash': (state.lang === 'ru' ? 'Наличные' : 'Naqd'), 
+                                                                        'card': (state.lang === 'ru' ? 'Карта' : 'Karta'), 
+                                                                        'debt': (state.lang === 'ru' ? 'Долг' : 'Qarz'), 
+                                                                        'Уплочен': (state.lang === 'ru' ? 'Погашен' : 'To\'langan') 
+                                                                    };
+                                                                    return `<span class="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 shadow-sm ${colors[s.paymentType] || 'text-slate-400'}">${labels[s.paymentType] || s.paymentType}</span>`;
+                                                                })()}
                                                             </div>
-                                                        `
-                                                    }
+                                                            <div class="col-span-3 text-right" style="grid-column: span 3 / span 3 !important; text-align: right !important;">
+                                                                <span class="text-sm font-extrabold text-slate-900 leading-none">${formatPrice(s.total || 0)}</span>
+                                                            </div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+
+                                                <div class="border-t border-slate-100 pt-3.5 flex justify-between items-center font-bold">
+                                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${state.lang === 'ru' ? 'ОБЩИЙ ИТОГ ЧЕКА' : 'CHEKNING UMUMIY JAMI'}</span>
+                                                    <span class="text-base font-black text-slate-950 leading-none">${formatPrice(item.total || 0)}</span>
                                                 </div>
                                             </div>
+                                            `;
+                                        } else {
+                                            const s = item.sale;
+                                            itemHtml = `
+                                            <div class="bg-white p-5 rounded-3xl border border-slate-200 border-l-4 border-l-orange-500 shadow-sm grid grid-cols-12 gap-6 items-center relative mb-4 text-left" style="display: grid !important; grid-template-columns: repeat(12, minmax(0, 1fr)) !important; page-break-inside: avoid !important; break-inside: avoid !important; border-left: 4px solid #f97316 !important;">
+                                                <div class="col-span-2 w-full text-left flex flex-col justify-center" style="grid-column: span 2 / span 2 !important;">
+                                                    <div class="font-bold text-slate-705 text-sm">${formatFriendlyDate(s.displayTimestamp || s.timestamp)}</div>
+                                                    <div class="text-[10.5px] font-semibold text-slate-400 mt-1 flex items-center gap-1">
+                                                        <i class="w-3.5 h-3.5 text-slate-350" data-lucide="clock"></i>
+                                                        ${new Date(s.displayTimestamp || s.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+                                                    </div>
+                                                </div>
 
-                                            <div class="col-span-2 flex justify-center" style="grid-column: span 2 / span 2 !important; display: flex !important; justify-content: center !important;">
-                                                ${(() => {
-                                                    const colors = {
-                                                        'cash': 'text-emerald-700 bg-emerald-50 border-emerald-150',
-                                                        'card': 'text-blue-700 bg-blue-50 border-blue-150',
-                                                        'debt': 'text-red-700 bg-red-50 border-red-150',
-                                                        'Уплочен': 'text-amber-700 bg-amber-50 border-amber-150'
-                                                    };
-                                                    const labels = { 
-                                                        'cash': (state.lang === 'ru' ? 'Наличные' : 'Naqd'), 
-                                                        'card': (state.lang === 'ru' ? 'Карта' : 'Karta'), 
-                                                        'debt': (state.lang === 'ru' ? 'Долг' : 'Qarz'), 
-                                                        'Уплочен': (state.lang === 'ru' ? 'Погашен' : 'To\'langan') 
-                                                    };
-                                                    return `<span class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 shadow-sm ${colors[s.paymentType] || 'text-slate-400'}">${labels[s.paymentType] || s.paymentType}</span>`;
-                                                })()}
-                                            </div>
+                                                <div class="col-span-5 w-full text-left flex flex-col gap-1.5" style="grid-column: span 5 / span 5 !important;">
+                                                    <div class="bg-slate-50/55 p-3.5 rounded-2xl border border-slate-100 flex flex-col gap-2 shadow-inner">
+                                                        ${(s.items && s.items.length > 0)
+                                                            ? s.items.map(i => `
+                                                                <div class="flex justify-between items-center text-xs text-slate-755 gap-4 font-bold">
+                                                                    <div class="font-semibold text-slate-850 flex items-center gap-1.5 min-w-0 font-medium">
+                                                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0 animate-pulse"></span>
+                                                                        <span class="truncate min-w-0" style="color: black !important;">${i.name}</span>
+                                                                        <span class="text-accent font-black bg-orange-50 px-1.5 py-0.5 rounded-md text-[9px] flex-shrink-0">x${i.qty || 1}</span>
+                                                                    </div>
+                                                                    <span class="font-black text-slate-550 whitespace-nowrap">${formatPrice((i.price || 0) * (i.qty || 1))}</span>
+                                                                </div>
+                                                            `).join('')
+                                                            : `
+                                                                <div class="italic text-xs font-bold text-amber-550 flex items-center gap-1.5">
+                                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                                                    ${s.paymentType === 'Уплочен' ? (state.lang === 'ru' ? 'Оплата старого долга 💳' : 'Eski qarz to\'lovi 💳') : '—'}
+                                                                </div>
+                                                            `
+                                                        }
+                                                    </div>
+                                                </div>
 
-                                            <div class="col-span-3 text-right flex flex-col items-end" style="grid-column: span 3 / span 3 !important; text-align: right !important;">
-                                                <span class="text-sm font-extrabold text-slate-950 leading-none">${formatPrice(s.total)}</span>
+                                                <div class="col-span-2 flex justify-center" style="grid-column: span 2 / span 2 !important; display: flex !important; justify-content: center !important;">
+                                                    ${(() => {
+                                                        const colors = {
+                                                            'cash': 'text-emerald-700 bg-emerald-50 border-emerald-150',
+                                                            'card': 'text-blue-700 bg-blue-50 border-blue-150',
+                                                            'debt': 'text-red-700 bg-red-50 border-red-150',
+                                                            'Уплочен': 'text-amber-700 bg-amber-50 border-amber-150'
+                                                        };
+                                                        const labels = { 
+                                                            'cash': (state.lang === 'ru' ? 'Наличные' : 'Naqd'), 
+                                                            'card': (state.lang === 'ru' ? 'Карта' : 'Karta'), 
+                                                            'debt': (state.lang === 'ru' ? 'Долг' : 'Qarz'), 
+                                                            'Уплочен': (state.lang === 'ru' ? 'Погашен' : 'To\'langan') 
+                                                        };
+                                                        return `<span class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 shadow-sm ${colors[s.paymentType] || 'text-slate-400'}">${labels[s.paymentType] || s.paymentType}</span>`;
+                                                    })()}
+                                                </div>
+
+                                                <div class="col-span-3 text-right flex flex-col items-end" style="grid-column: span 3 / span 3 !important; text-align: right !important;">
+                                                    <span class="text-sm font-extrabold text-slate-950 leading-none">${formatPrice(s.total || 0)}</span>
+                                                </div>
                                             </div>
+                                            `;
+                                        }
+
+                                        return monthHeadingHtml + itemHtml;
+                                    }).join('')}
+                                    ${closedDeals.length === 0 ? `
+                                        <div class="bg-white p-16 text-center text-slate-350 italic rounded-3xl border border-slate-200 shadow-inner" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                            ${t('no_records')}
                                         </div>
-                                        `;
-                                    }
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
 
-                                    return monthHeadingHtml + itemHtml;
-                                }).join('')}
-                                ${closedDeals.length === 0 ? `
-                                    <div class="bg-white p-16 text-center text-slate-350 italic rounded-3xl border border-slate-200 shadow-inner" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                        ${t('no_records')}
+                        <!-- Expenses Section -->
+                        <div class="space-y-4 mb-8 text-left">
+                            <h3 class="text-sm font-black uppercase italic text-slate-500 flex items-center gap-2 ml-1">
+                                <i data-lucide="calculator" class="w-5 h-5 text-red-500"></i> ${t('personal_expenses')}
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 16px !important;">
+                                ${periodExpenses.map(e => `
+                                    <div class="bg-white p-5 rounded-2xl border border-slate-200 flex justify-between items-center shadow-sm" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                        <div class="truncate mr-2 max-w-[95%] text-left">
+                                            <div class="text-base font-black text-slate-850 leading-none">${formatPrice(e.amount || 0)}</div>
+                                            ${e.note ? `<div class="text-xs text-slate-500 font-semibold truncate mt-2" title="${e.note}">${e.note}</div>` : ''}
+                                            <div class="text-[9.5px] text-slate-400 font-black uppercase tracking-wider mt-2">${formatFriendlyDate(e.timestamp)}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                ${periodExpenses.length === 0 ? `
+                                    <div class="col-span-full py-16 text-center text-slate-350 italic rounded-3xl border border-slate-200 bg-white shadow-inner" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                        ${state.lang === 'ru' ? 'Личных расходов не зарегистрировано за этот период.' : 'Ushbu davr uchun shaxsiy xarajatlar ro\'yxatdan o\'tkazilmagan.'}
                                     </div>
                                 ` : ''}
                             </div>
                         </div>
                     </div>
+                `;
 
-                    <!-- Expenses Section -->
-                    <div class="space-y-4 mb-8 text-left">
-                        <h3 class="text-sm font-black uppercase italic text-slate-500 flex items-center gap-2 ml-1">
-                            <i data-lucide="calculator" class="w-5 h-5 text-red-500"></i> ${t('personal_expenses')}
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style="display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 16px !important;">
-                            ${periodExpenses.map(e => `
-                                <div class="bg-white p-5 rounded-2xl border border-slate-200 flex justify-between items-center shadow-sm" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                    <div class="truncate mr-2 max-w-[95%] text-left">
-                                        <div class="text-base font-black text-slate-850 leading-none">${formatPrice(e.amount)}</div>
-                                        ${e.note ? `<div class="text-xs text-slate-500 font-semibold truncate mt-2" title="${e.note}">${e.note}</div>` : ''}
-                                        <div class="text-[9.5px] text-slate-400 font-black uppercase tracking-wider mt-2">${formatFriendlyDate(e.timestamp)}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                            ${periodExpenses.length === 0 ? `
-                                <div class="col-span-full py-16 text-center text-slate-350 italic rounded-3xl border border-slate-200 bg-white shadow-inner" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                    ${state.lang === 'ru' ? 'Личных расходов не зарегистрировано за этот период.' : 'Ushbu davr uchun shaxsiy xarajatlar ro\'yxatdan o\'tkazilmagan.'}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Clean up any existing print artifacts first
-            document.body.classList.remove('printing-report');
-            const prevStyle = document.getElementById('temp-monthly-print-style');
-            if (prevStyle) prevStyle.remove();
-            const prevContainer = document.getElementById('temp-monthly-pdf-report');
-            if (prevContainer) prevContainer.remove();
+                lucide.createIcons();
+                
+                const rptTitle = state.lang === 'ru' ? 'Отчет' : 'Hisobot';
+                document.title = `${rptTitle}_${fileSuffix}`;
+                document.body.classList.add('printing-report');
 
-            document.body.appendChild(printContainer);
-            lucide.createIcons();
-            
-            const style = document.createElement('style');
-            style.id = 'temp-monthly-print-style';
-            style.innerHTML = `
-                @media screen {
-                    #temp-monthly-pdf-report {
-                        display: none !important;
-                    }
+                // Trigger print synchronously within the user gesture event
+                try {
+                    window.print();
+                } catch (err) {
+                    console.error('Print trigger:', err);
                 }
-                @media print {
-                    @page {
-                        size: A4 portrait;
-                        margin: 12mm 14mm;
-                    }
-                    body.printing-report #app-main-area,
-                    body.printing-report nav,
-                    body.printing-report header,
-                    body.printing-report #toast-container,
-                    body.printing-report #modal-container,
-                    body.printing-report #scanner-modal-container,
-                    body > :not(#temp-monthly-pdf-report) {
-                        display: none !important;
-                    }
-                    html, body {
-                        -webkit-print-color-adjust: exact !important;
-                        print-color-adjust: exact !important;
-                        background: #F8F9FA !important;
-                        color: #0f172a !important;
-                        height: auto !important;
-                        min-height: 0 !important;
-                        max-height: none !important;
-                        overflow: visible !important;
-                        overflow-x: visible !important;
-                        position: static !important;
-                        width: 100% !important;
-                        max-width: 100% !important;
-                        zoom: 1 !important;
-                        transform: none !important;
-                    }
-                    #temp-monthly-pdf-report {
-                        display: block !important;
-                        position: static !important;
-                        inset: auto !important;
-                        width: 100% !important;
-                        max-width: 100% !important;
-                        height: auto !important;
-                        min-height: 0 !important;
-                        max-height: none !important;
-                        overflow: visible !important;
-                        background: #F8F9FA !important;
-                        color: #0f172a !important;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                        box-sizing: border-box !important;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            const originalTitle = document.title;
-            const rptTitle = state.lang === 'ru' ? 'Отчет' : 'Hisobot';
-            document.title = `${rptTitle}_${fileSuffix}`;
-            
-            document.body.classList.add('printing-report');
-
-            let isCleanedUp = false;
-            const cleanup = () => {
-                if (isCleanedUp) return;
-                isCleanedUp = true;
-                window.removeEventListener('afterprint', cleanup);
-                document.title = originalTitle;
-                document.body.classList.remove('printing-report');
-                const cs = document.getElementById('temp-monthly-print-style');
-                if (cs) cs.remove();
-                const cc = document.getElementById('temp-monthly-pdf-report');
-                if (cc) cc.remove();
-            };
-
-            window.addEventListener('afterprint', cleanup);
-
-            // Safe fallback: 60s timeout so tablet print spooler has time to complete
-            setTimeout(cleanup, 60000);
-
-            // Call window.print() SYNCHRONOUSLY to preserve user activation gesture on tablets
-            try {
-                window.print();
-            } catch (err) {
-                console.error('Print failed:', err);
-                cleanup();
+            } catch (error) {
+                console.error('Error generating PDF report:', error);
+                alert((state.lang === 'ru' ? 'Ошибка формирования отчета: ' : 'Hisobot yaratishda xatolik: ') + (error && error.message ? error.message : error));
             }
         };
 
