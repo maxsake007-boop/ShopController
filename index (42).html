@@ -12,8 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
-    <!-- html2pdf for direct client-side PDF export on tablets & mobile -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -2934,6 +2932,12 @@
             };
         };
 
+        const isMobileOrTablet = () => {
+            return (window.innerWidth <= 1024 && window.innerHeight <= 550) || 
+                   ('ontouchstart' in window && window.innerWidth <= 1024) ||
+                   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        };
+
         window.closePdfReport = () => {
             document.body.classList.remove('printing-report');
             const c = document.getElementById('temp-monthly-pdf-report');
@@ -2953,33 +2957,11 @@
 
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('printing-report');
-        });
-
-        window.downloadPdfReport = async (fileSuffix) => {
-            const paper = document.getElementById('report-paper-inner');
-            if (!paper) return;
-
-            showToast(state.lang === 'ru' ? '⏳ Формирование PDF файла...' : '⏳ PDF fayli tayyorlanmoqda...');
-
-            if (typeof html2pdf !== 'undefined') {
-                try {
-                    const opt = {
-                        margin: [8, 8, 8, 8],
-                        filename: `Отчет_${fileSuffix}.pdf`,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2, useCORS: true, logging: false },
-                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                    };
-                    await html2pdf().set(opt).from(paper).save();
-                    showToast(state.lang === 'ru' ? '✅ PDF отчет успешно скачан!' : '✅ PDF hisobot yuklab olindi!');
-                    return;
-                } catch (err) {
-                    console.error('html2pdf generation error:', err);
-                    showToast(state.lang === 'ru' ? '⚠️ Запуск системной печати...' : "⚠️ Tizim chop etishga o'tilmoqda...");
-                }
+            if (!isMobileOrTablet()) {
+                const c = document.getElementById('temp-monthly-pdf-report');
+                if (c) c.remove();
             }
-            triggerPrintFromReport();
-        };
+        });
 
         window.openPdfReportModal = (periodType) => {
             try {
@@ -3082,28 +3064,27 @@
                     document.body.appendChild(printContainer);
                 }
                 
-                printContainer.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] overflow-y-auto custom-scrollbar flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 text-slate-900';
+                const onTabletOrMobile = isMobileOrTablet();
+                printContainer.className = onTabletOrMobile 
+                    ? 'fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] overflow-y-auto custom-scrollbar flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 text-slate-900'
+                    : 'print-only';
                 
                 let lastMonthKey = null;
 
                 printContainer.innerHTML = `
-                    <!-- Screen Action Toolbar (Hidden in Print) -->
-                    <div class="w-full max-w-4xl flex flex-wrap items-center justify-between pb-3 pt-1 no-print gap-2 flex-shrink-0">
+                    <!-- Screen Action Toolbar (Hidden in Print, visible on tablets/mobile) -->
+                    ${onTabletOrMobile ? `
+                    <div class="w-full max-w-4xl flex items-center justify-between pb-3 pt-1 no-print gap-2 flex-shrink-0">
                         <button onclick="closePdfReport()" class="px-3.5 sm:px-4 py-2 bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all min-h-[40px] cursor-pointer">
                             <i data-lucide="arrow-left" class="w-4 h-4 text-slate-500"></i>
                             <span>${state.lang === 'ru' ? 'Назад в настройки' : 'Sozlamalarga qaytish'}</span>
                         </button>
-                        <div class="flex items-center gap-2">
-                            <button onclick="downloadPdfReport('${fileSuffix}')" class="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all min-h-[40px] cursor-pointer">
-                                <i data-lucide="download" class="w-4 h-4"></i>
-                                <span>${state.lang === 'ru' ? 'Скачать PDF' : 'PDF yuklab olish'}</span>
-                            </button>
-                            <button onclick="triggerPrintFromReport()" class="px-4 sm:px-5 py-2 bg-accent hover:bg-orange-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-orange-500/30 transition-all min-h-[40px] cursor-pointer">
-                                <i data-lucide="printer" class="w-4 h-4"></i>
-                                <span>${state.lang === 'ru' ? 'Распечатать' : 'Chop etish'}</span>
-                            </button>
-                        </div>
+                        <button onclick="triggerPrintFromReport()" class="px-5 sm:px-6 py-2.5 bg-accent hover:bg-orange-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-orange-500/30 transition-all min-h-[42px] cursor-pointer">
+                            <i data-lucide="printer" class="w-4 h-4"></i>
+                            <span>${state.lang === 'ru' ? 'Распечатать / PDF' : 'Chop etish / PDF'}</span>
+                        </button>
                     </div>
+                    ` : ''}
 
                     <!-- Printable Paper Report -->
                     <div id="report-paper-inner" class="w-full max-w-4xl bg-[#F8F9FA] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl border border-slate-200/80 mb-10 report-paper-content flex-shrink-0" style="font-family: 'Inter', sans-serif; color: #0f172a !important;">
@@ -3349,6 +3330,18 @@
                 
                 const rptTitle = state.lang === 'ru' ? 'Отчет' : 'Hisobot';
                 document.title = `${rptTitle}_${fileSuffix}`;
+
+                // ON DESKTOP PC: Trigger system print immediately with 1 click, no preview modal!
+                if (!onTabletOrMobile) {
+                    document.body.classList.add('printing-report');
+                    setTimeout(() => {
+                        try {
+                            window.print();
+                        } catch (err) {
+                            console.error('Print trigger error:', err);
+                        }
+                    }, 50);
+                }
             } catch (error) {
                 console.error('Error generating PDF report:', error);
                 alert((state.lang === 'ru' ? 'Ошибка формирования отчета: ' : 'Hisobot yaratishda xatolik: ') + (error && error.message ? error.message : error));
