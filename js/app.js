@@ -81,8 +81,9 @@ window.render = () => {
 window.initApp = async () => {
     // 1. Регистрация Service Worker (PWA)
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=2.5').then((reg) => {
             console.log('[PWA] Service Worker зарегистрирован:', reg.scope);
+            reg.update().catch(() => {});
         }).catch((err) => {
             console.warn('[PWA] Ошибка регистрации Service Worker:', err);
         });
@@ -124,6 +125,9 @@ window.initApp = async () => {
     if (titleLabel) titleLabel.textContent = t(state.activeTab);
 
     render();
+    if (window.checkInstallButtonsVisibility) {
+        window.checkInstallButtonsVisibility();
+    }
     if (window.initModalScrollLock) {
         window.initModalScrollLock();
     }
@@ -132,18 +136,27 @@ window.initApp = async () => {
 // --- PWA INSTALLATION SYSTEM ---
 window.deferredInstallPrompt = null;
 
+window.checkInstallButtonsVisibility = () => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true ||
+                         (document.referrer && document.referrer.includes('android-app://'));
+
+    document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
+        if (isStandalone) {
+            b.classList.add('hidden');
+            b.classList.remove('flex');
+        } else {
+            b.classList.remove('hidden');
+            b.classList.add('flex');
+        }
+    });
+};
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     window.deferredInstallPrompt = e;
     console.log('[PWA] beforeinstallprompt перехвачен');
-
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (!isStandalone) {
-        document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
-            b.classList.remove('hidden');
-            b.classList.add('flex');
-        });
-    }
+    window.checkInstallButtonsVisibility();
 });
 
 window.addEventListener('appinstalled', () => {
@@ -160,23 +173,60 @@ window.addEventListener('appinstalled', () => {
 
 window.triggerPWAInstall = async () => {
     if (window.deferredInstallPrompt) {
-        window.deferredInstallPrompt.prompt();
-        const { outcome } = await window.deferredInstallPrompt.userChoice;
-        console.log('[PWA] Выбор пользователя:', outcome);
-        if (outcome === 'accepted') {
-            window.deferredInstallPrompt = null;
-            document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
-                b.classList.add('hidden');
-                b.classList.remove('flex');
-            });
+        try {
+            window.deferredInstallPrompt.prompt();
+            const { outcome } = await window.deferredInstallPrompt.userChoice;
+            console.log('[PWA] Выбор пользователя:', outcome);
+            if (outcome === 'accepted') {
+                window.deferredInstallPrompt = null;
+                document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
+                    b.classList.add('hidden');
+                    b.classList.remove('flex');
+                });
+            }
+            return;
+        } catch (err) {
+            console.warn('[PWA] Ошибка prompt:', err);
         }
-    } else {
+    }
+
+    const modal = document.getElementById('modal-container');
+    if (modal) {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (isIOS) {
-            alert('Для установки на iPad/iPhone нажмите кнопку «Поделиться» в браузере Safari и выберите «На экран "Домой"».');
-        } else {
-            alert('Чтобы установить Agora:\nВ меню браузера Chrome (три точки) выберите «Установить приложение» или «Добавить на главный экран».');
-        }
+        modal.innerHTML = `
+            <div onclick="if(event.target===this) document.getElementById('modal-container').innerHTML=''" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[150] flex items-center justify-center p-3 sm:p-4">
+                <div class="bg-white rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-slate-100 space-y-4">
+                    <div class="w-14 h-14 rounded-2xl bg-orange-100 text-accent flex items-center justify-center mx-auto shadow-inner">
+                        <i data-lucide="${isIOS ? 'share' : 'smartphone'}" class="w-7 h-7"></i>
+                    </div>
+                    <div class="text-center space-y-1">
+                        <h3 class="text-base font-black text-slate-800 uppercase tracking-tight">Установка на рабочий стол</h3>
+                        <p class="text-xs text-slate-500 font-medium">Работает на весь экран и без интернета</p>
+                    </div>
+                    ${isIOS ? `
+                        <div class="bg-slate-50 p-4 rounded-2xl space-y-2 text-xs text-slate-700 border border-slate-100">
+                            <p class="font-bold text-accent">Инструкция для Safari (iPad / iPhone):</p>
+                            <p>1. Внизу экрана нажмите кнопку <b>«Поделиться»</b> (квадрат со стрелкой).</p>
+                            <p>2. Прокрутите список и нажмите <b>«На экран "Домой"»</b>.</p>
+                            <p>3. Нажмите <b>«Добавить»</b> в правом верхнем углу.</p>
+                        </div>
+                    ` : `
+                        <div class="bg-slate-50 p-4 rounded-2xl space-y-2 text-xs text-slate-700 border border-slate-100">
+                            <p class="font-bold text-accent">Инструкция для Chrome на планшете / телефоне:</p>
+                            <p>1. Нажмите три точки <b>(⋮)</b> в правом верхнем углу Chrome.</p>
+                            <p>2. Выберите пункт <b>«Добавить на главный экран»</b> (или «Установить приложение»).</p>
+                            <p>3. Подтвердите нажатием <b>«Добавить»</b>.</p>
+                        </div>
+                    `}
+                    <button type="button" onclick="document.getElementById('modal-container').innerHTML=''" class="w-full min-h-[44px] py-3 bg-accent hover:bg-accent-hover text-white rounded-2xl font-black uppercase text-xs tracking-wider transition-all shadow-md shadow-accent/20 cursor-pointer active:scale-95">
+                        Понятно
+                    </button>
+                </div>
+            </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+    } else {
+        alert('Для установки Agora:\nВ меню браузера Chrome (три точки ⋮) выберите «Добавить на главный экран» или «Установить приложение».');
     }
 };
 

@@ -2,15 +2,19 @@
 //                    SERVICE WORKER - AGORA POS (PWA)
 // =============================================================================
 
-const CACHE_NAME = 'agora-pos-v2.3';
+const CACHE_NAME = 'agora-pos-v2.5';
 
 // Основные файлы приложения для автономной работы (App Shell)
 const STATIC_ASSETS = [
     '/',
+    '/?v=2.5',
+    '/index.html',
     '/manifest.json',
+    '/manifest.json?v=2.5',
     '/css/app.css',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
+    '/icons/icon-maskable.png',
     '/icons/favicon.png',
     '/icons/logo.png',
     '/js/config.js',
@@ -107,6 +111,7 @@ self.addEventListener('fetch', (event) => {
                     const cache = await caches.open(CACHE_NAME);
                     const match = (await cache.match(request)) ||
                                   (await cache.match('/')) ||
+                                  (await cache.match('/?v=2.5')) ||
                                   (await cache.match('/index.html'));
                     if (match) return match;
                     return new Response(
@@ -135,6 +140,8 @@ self.addEventListener('fetch', (event) => {
                     caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
                 }
                 return networkResponse;
+            }).catch(() => {
+                return new Response('', { status: 408, statusText: 'Offline' });
             });
         })
     );
