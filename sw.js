@@ -2,7 +2,7 @@
 //                    SERVICE WORKER - AGORA POS (PWA)
 // =============================================================================
 
-const CACHE_NAME = 'agora-pos-v2.2';
+const CACHE_NAME = 'agora-pos-v2.3';
 
 // Основные файлы приложения для автономной работы (App Shell)
 const STATIC_ASSETS = [
@@ -11,7 +11,6 @@ const STATIC_ASSETS = [
     '/css/app.css',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
-    '/icons/icon-maskable.png',
     '/icons/favicon.png',
     '/icons/logo.png',
     '/js/config.js',
@@ -45,15 +44,13 @@ const CDN_ASSETS = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(async (cache) => {
-            // Кешируем локальные файлы по одному, чтобы один сбой не ломал остальные
             for (const asset of STATIC_ASSETS) {
                 try {
                     await cache.add(asset);
                 } catch (e) {
-                    console.warn('[SW] Ошибка предварительного кеширования:', asset, e);
+                    console.warn('[SW] Ошибка кеширования:', asset, e);
                 }
             }
-            // Предзагрузка внешних CDN
             for (const url of CDN_ASSETS) {
                 try {
                     await cache.add(url);
@@ -85,7 +82,7 @@ self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
 
-    // 1. КРИТИЧЕСКИ ВАЖНО: Запросы к Supabase (проверка активации) НИКОГДА НЕ КЕШИРУЮТСЯ
+    // 1. Запросы к Supabase никогда не кешируются
     if (
         url.hostname.includes('supabase.co') ||
         url.pathname.includes('/rest/v1/') ||
@@ -95,7 +92,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // 2. Для навигации (HTML страница) - Network First с падением в кеш
+    // 2. Для навигации (HTML) - Network First с надежным отказоустойчивым кешем
     if (request.mode === 'navigate') {
         event.respondWith(
             fetch(request)
@@ -108,30 +105,37 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(async () => {
                     const cache = await caches.open(CACHE_NAME);
-                    const directMatch = await cache.match(request);
-                    if (directMatch) return directMatch;
-                    const rootMatch = await cache.match('/');
-                    if (rootMatch) return rootMatch;
-                    return (await cache.match('/index.html')) || Response.error();
+                    const match = (await cache.match(request)) ||
+                                  (await cache.match('/')) ||
+                                  (await cache.match('/index.html'));
+                    if (match) return match;
+                    return new Response(
+                        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Agora</title><meta http-equiv="refresh" content="2"></head><body>Загрузка Agora...</body></html>',
+                        { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+                    );
                 })
         );
         return;
     }
 
-    // 3. Для остальных GET-запросов (скрипты, стили, CDN, картинки) - Stale While Revalidate
+    // 3. Для остальных GET-запросов - Cache First / Stale While Revalidate
     event.respondWith(
         caches.match(request).then((cachedResponse) => {
-            const fetchPromise = fetch(request)
-                .then((networkResponse) => {
+            if (cachedResponse) {
+                fetch(request).then((networkResponse) => {
                     if (networkResponse && networkResponse.status === 200) {
-                        const copy = networkResponse.clone();
-                        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                        caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
                     }
-                    return networkResponse;
-                })
-                .catch(() => cachedResponse);
-
-            return cachedResponse || fetchPromise;
+                }).catch(() => {});
+                return cachedResponse;
+            }
+            return fetch(request).then((networkResponse) => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const copy = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                }
+                return networkResponse;
+            });
         })
     );
 });
