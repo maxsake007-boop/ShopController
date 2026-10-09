@@ -15,11 +15,13 @@ let tabletZoomLevel = (() => {
 window.tabletZoomLevel = tabletZoomLevel;
 
 window.applyTabletZoom = () => {
-    const isTabletLandscape = window.innerWidth <= 1024 && window.innerHeight <= 550;
+    const isTabletLandscape = (window.innerWidth <= 1280 && window.innerHeight <= 950) || (window.innerWidth <= 1024);
+    const zoomText = `${Math.round(tabletZoomLevel * 100)}%`;
     const zoomValEl = document.getElementById('tablet-zoom-value');
     if (zoomValEl) {
-        zoomValEl.textContent = `${Math.round(tabletZoomLevel * 100)}%`;
+        zoomValEl.textContent = zoomText;
     }
+    document.querySelectorAll('.tablet-zoom-value-sync').forEach(el => el.textContent = zoomText);
 
     if (isTabletLandscape) {
         document.documentElement.style.setProperty('--tablet-zoom', String(tabletZoomLevel));
