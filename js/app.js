@@ -129,6 +129,57 @@ window.initApp = async () => {
     }
 };
 
+// --- PWA INSTALLATION SYSTEM ---
+window.deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredInstallPrompt = e;
+    console.log('[PWA] beforeinstallprompt перехвачен');
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (!isStandalone) {
+        document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
+            b.classList.remove('hidden');
+            b.classList.add('flex');
+        });
+    }
+});
+
+window.addEventListener('appinstalled', () => {
+    console.log('[PWA] Приложение успешно установлено на устройство');
+    window.deferredInstallPrompt = null;
+    document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
+        b.classList.add('hidden');
+        b.classList.remove('flex');
+    });
+    if (window.showToast) {
+        showToast('✅ Agora успешно установлена на экран устройства!');
+    }
+});
+
+window.triggerPWAInstall = async () => {
+    if (window.deferredInstallPrompt) {
+        window.deferredInstallPrompt.prompt();
+        const { outcome } = await window.deferredInstallPrompt.userChoice;
+        console.log('[PWA] Выбор пользователя:', outcome);
+        if (outcome === 'accepted') {
+            window.deferredInstallPrompt = null;
+            document.querySelectorAll('#desktop-pwa-install-btn, #mobile-pwa-install-btn').forEach(b => {
+                b.classList.add('hidden');
+                b.classList.remove('flex');
+            });
+        }
+    } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+            alert('Для установки на iPad/iPhone нажмите кнопку «Поделиться» в браузере Safari и выберите «На экран "Домой"».');
+        } else {
+            alert('Чтобы установить Agora:\nВ меню браузера Chrome (три точки) выберите «Установить приложение» или «Добавить на главный экран».');
+        }
+    }
+};
+
 // Auto-run on DOM ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', window.initApp);

@@ -1,33 +1,35 @@
 // =============================================================================
-//                    SERVICE WORKER - SHOPRULER POS (PWA)
+//                    SERVICE WORKER - AGORA POS (PWA)
 // =============================================================================
 
-const CACHE_NAME = 'shopruller-pos-v2.1';
+const CACHE_NAME = 'agora-pos-v2.2';
 
 // Основные файлы приложения для автономной работы (App Shell)
 const STATIC_ASSETS = [
-    './',
-    './index.html',
-    './manifest.json',
-    './css/app.css',
-    './icons/icon-192.png',
-    './icons/icon-512.png',
-    './js/config.js',
-    './js/translations.js',
-    './js/db.js',
-    './js/state.js',
-    './js/utils.js',
-    './js/tablet-zoom.js',
-    './js/photo.js',
-    './js/activation.js',
-    './js/backup.js',
-    './js/views/kassa.js',
-    './js/views/sklad.js',
-    './js/views/dolgi.js',
-    './js/views/reports.js',
-    './js/views/dashboard.js',
-    './js/views/settings.js',
-    './js/app.js'
+    '/',
+    '/manifest.json',
+    '/css/app.css',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
+    '/icons/icon-maskable.png',
+    '/icons/favicon.png',
+    '/icons/logo.png',
+    '/js/config.js',
+    '/js/translations.js',
+    '/js/db.js',
+    '/js/state.js',
+    '/js/utils.js',
+    '/js/tablet-zoom.js',
+    '/js/photo.js',
+    '/js/activation.js',
+    '/js/backup.js',
+    '/js/views/kassa.js',
+    '/js/views/sklad.js',
+    '/js/views/dolgi.js',
+    '/js/views/reports.js',
+    '/js/views/dashboard.js',
+    '/js/views/settings.js',
+    '/js/app.js'
 ];
 
 // Внешние CDN библиотеки для кеширования
@@ -43,17 +45,19 @@ const CDN_ASSETS = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(async (cache) => {
-            // Кешируем локальные файлы
-            await cache.addAll(STATIC_ASSETS).catch((err) => {
-                console.warn('[SW] Ошибка предварительного кеширования локальных ресурсов:', err);
-            });
-            // Пробуем предварительно загрузить CDN
+            // Кешируем локальные файлы по одному, чтобы один сбой не ломал остальные
+            for (const asset of STATIC_ASSETS) {
+                try {
+                    await cache.add(asset);
+                } catch (e) {
+                    console.warn('[SW] Ошибка предварительного кеширования:', asset, e);
+                }
+            }
+            // Предзагрузка внешних CDN
             for (const url of CDN_ASSETS) {
                 try {
                     await cache.add(url);
-                } catch (e) {
-                    // CDN может загружаться позже в runtime
-                }
+                } catch (e) {}
             }
         })
     );
@@ -82,18 +86,16 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(request.url);
 
     // 1. КРИТИЧЕСКИ ВАЖНО: Запросы к Supabase (проверка активации) НИКОГДА НЕ КЕШИРУЮТСЯ
-    // Это исключает обход проверки через кеш браузера или service worker.
     if (
         url.hostname.includes('supabase.co') ||
         url.pathname.includes('/rest/v1/') ||
         request.method !== 'GET'
     ) {
-        // Только реальная сеть без вмешательства Service Worker
         event.respondWith(fetch(request));
         return;
     }
 
-    // 2. Для навигации (HTML) - Network First с падением в кеш (для мгновенного обновления после деплоя)
+    // 2. Для навигации (HTML страница) - Network First с падением в кеш
     if (request.mode === 'navigate') {
         event.respondWith(
             fetch(request)
@@ -104,13 +106,19 @@ self.addEventListener('fetch', (event) => {
                     }
                     return networkResponse;
                 })
-                .catch(() => caches.match('./index.html') || caches.match('./'))
+                .catch(async () => {
+                    const cache = await caches.open(CACHE_NAME);
+                    const directMatch = await cache.match(request);
+                    if (directMatch) return directMatch;
+                    const rootMatch = await cache.match('/');
+                    if (rootMatch) return rootMatch;
+                    return (await cache.match('/index.html')) || Response.error();
+                })
         );
         return;
     }
 
-    // 3. Для остальных GET-запросов (скрипты, стили, CDN, картинки):
-    // Stale-While-Revalidate: отдаем быстрый кеш, параллельно обновляем его из сети
+    // 3. Для остальных GET-запросов (скрипты, стили, CDN, картинки) - Stale While Revalidate
     event.respondWith(
         caches.match(request).then((cachedResponse) => {
             const fetchPromise = fetch(request)
@@ -121,9 +129,7 @@ self.addEventListener('fetch', (event) => {
                     }
                     return networkResponse;
                 })
-                .catch(() => {
-                    // Офлайн: если нет сети, ничего не делаем, отдали cachedResponse
-                });
+                .catch(() => cachedResponse);
 
             return cachedResponse || fetchPromise;
         })

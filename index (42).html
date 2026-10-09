@@ -70,6 +70,10 @@
                 <span class="text-[9px] font-black tracking-wider bg-orange-100 text-accent px-1.5 py-0.5 rounded-full uppercase">v2.0</span>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
+                <button id="desktop-pwa-install-btn" type="button" onclick="triggerPWAInstall()" class="hidden items-center gap-1.5 px-3 py-1 bg-orange-50 hover:bg-orange-100 text-accent border border-orange-200 rounded-full text-xs font-black uppercase transition-all shadow-2xs cursor-pointer active:scale-95" title="Установить Agora на рабочий стол">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Установить</span>
+                </button>
                 <!-- Tablet Zoom Pill Controller (Visible only on tablet landscape <=1024px x <=550px) -->
                 <div class="tab-zoom-pill items-center gap-1 bg-slate-100 p-0.5 sm:p-1 rounded-full border border-slate-200 shadow-2xs" title="Масштаб для планшета">
                     <button type="button" onclick="changeTabletZoom(-0.05)" class="w-6 h-6 rounded-full bg-white hover:bg-slate-200 active:scale-95 text-slate-700 font-black text-xs flex items-center justify-center shadow-xs transition-all touch-manipulation cursor-pointer" aria-label="Уменьшить масштаб">−</button>
@@ -87,7 +91,13 @@
                 <h1 class="text-xs font-black text-accent italic uppercase app-name-display">Agora</h1>
                 <span class="text-[8px] font-black tracking-wider bg-orange-100 text-accent px-1.5 py-0.5 rounded-full uppercase">v2.0</span>
             </div>
-            <div id="mobile-lang-container" class="scale-90"></div>
+            <div class="flex items-center gap-1.5">
+                <button id="mobile-pwa-install-btn" type="button" onclick="triggerPWAInstall()" class="hidden items-center gap-1 px-2 py-0.5 bg-orange-50 text-accent border border-orange-200 rounded-full text-[10px] font-black uppercase active:scale-95">
+                    <i data-lucide="download" class="w-3 h-3"></i>
+                    <span>Установить</span>
+                </button>
+                <div id="mobile-lang-container" class="scale-90"></div>
+            </div>
         </header>
 
         <!-- Dynamic Content -->

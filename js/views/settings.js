@@ -52,6 +52,23 @@ window.renderSettings = () => `
             </div>
         </div>
 
+        <!-- PWA Install Section -->
+        <div class="bg-gradient-to-r from-orange-50 to-amber-50 p-3.5 sm:p-5 rounded-2xl border border-orange-200 shadow-sm space-y-2.5">
+            <h3 class="text-xs font-black uppercase text-accent tracking-wide flex items-center justify-between">
+                <span>${state.lang === 'ru' ? 'Установка на устройство' : 'Qurilmaga o\'rnatish'}</span>
+                <i data-lucide="smartphone" class="w-4 h-4 text-accent"></i>
+            </h3>
+            <p class="text-xs text-slate-600 font-medium leading-relaxed">
+                ${state.lang === 'ru'
+                    ? 'Установите Agora как отдельное приложение на рабочий стол или экран планшета для быстрой работы без браузера.'
+                    : 'Brauzersiz tez ishlash uchun Agorani ish stoli yoki planshet ekraniga alohida ilova sifatida o\'rnating.'}
+            </p>
+            <button type="button" onclick="triggerPWAInstall()" class="w-full min-h-[44px] bg-accent hover:bg-accent-hover text-white px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-accent/20 active:scale-95 transition-all cursor-pointer">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>${state.lang === 'ru' ? 'Установить Agora на экран' : 'Agorani o\'rnatish'}</span>
+            </button>
+        </div>
+
         <!-- License & System Info -->
         <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
             <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5 flex items-center justify-between">
@@ -64,7 +81,7 @@ window.renderSettings = () => `
             <div class="text-xs space-y-1.5 text-slate-500">
                 <div class="flex justify-between items-center py-1 border-b border-slate-100">
                     <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Клиент' : 'Mijoz'}:</span>
-                    <span class="font-black text-slate-800">${window.CLIENT_CONFIG?.shopName || 'ShopRuler'}</span>
+                    <span class="font-black text-slate-800">${window.CLIENT_CONFIG?.shopName || 'Agora'}</span>
                 </div>
                 <div class="flex justify-between items-center py-1 border-b border-slate-100">
                     <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Хранилище' : 'Xotira'}:</span>
