@@ -79,8 +79,37 @@ window.render = () => {
 
 // Lifecycle initialization
 window.initApp = async () => {
+    // 1. Регистрация Service Worker (PWA)
+    if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+            console.log('[PWA] Service Worker зарегистрирован:', reg.scope);
+        }).catch((err) => {
+            console.warn('[PWA] Ошибка регистрации Service Worker:', err);
+        });
+    }
+
     try {
+        // 2. Проверка статуса активации в существующей IndexedDB
+        const license = window.checkActivationStatus ? await window.checkActivationStatus() : null;
+        if (!license) {
+            // Приложение не активировано: показываем экран ввода ключа
+            if (window.showActivationScreen) {
+                window.showActivationScreen();
+            }
+            return;
+        }
+
+        // 3. Запрос на защиту от автоочистки хранилища браузера
+        if (navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().then((persisted) => {
+                console.log(`[Storage] Статус постоянного хранилища: ${persisted ? 'предоставлено' : 'отклонено'}`);
+            }).catch(() => {});
+        }
+
+        // 4. Безопасная проверка и миграция из localStorage (только если необходимо)
         await migrateFromLocalStorage();
+
+        // 5. Загрузка данных из IndexedDB
         await loadStateFromDb();
     } catch (err) {
         console.error("Initialization error:", err);

@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>NMN - Business Control</title>
+    <title>Agora - Business Control</title>
     
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF6400">
+    <link rel="icon" type="image/png" href="icons/favicon.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +30,8 @@
             theme: {
                 extend: {
                     colors: {
-                        accent: '#FF6B00',
-                        'accent-hover': '#E66100',
+                        accent: '#FF6400',
+                        'accent-hover': '#E65100',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -41,9 +49,7 @@
     <!-- SIDEBAR -->
     <nav class="w-24 bg-white border-r border-slate-200 hidden md:flex flex-col flex-shrink-0 app-sidebar overflow-y-auto custom-scrollbar">
         <div class="h-16 md:h-20 flex items-center justify-center border-b border-slate-100 flex-shrink-0 logo-header">
-            <div class="w-10 h-10 md:w-12 md:h-12 bg-accent rounded-2xl flex items-center justify-center text-white shadow-lg shadow-accent/20 logo-box">
-                <i data-lucide="store" class="w-5 h-5 md:w-6 md:h-6"></i>
-            </div>
+            <img src="icons/icon-192.png" alt="Agora" class="w-10 h-10 md:w-12 md:h-12 rounded-2xl shadow-lg shadow-accent/20 object-cover logo-box">
         </div>
         
         <div class="flex-1 py-3 md:py-6 px-1.5 md:px-2 space-y-1.5 md:space-y-3 flex flex-col items-center sidebar-nav" id="nav-links">
@@ -77,8 +83,8 @@
         <!-- Mobile Header -->
         <header class="bg-white border-b sticky top-0 z-40 md:hidden px-3 h-11 flex items-center justify-between flex-shrink-0 mobile-header">
             <div class="flex items-center gap-2">
-                <i data-lucide="store" class="w-4 h-4 text-accent"></i>
-                <h1 class="text-xs font-black text-accent italic uppercase app-name-display">NMN</h1>
+                <img src="icons/icon-192.png" alt="Agora" class="w-5 h-5 rounded-md object-cover">
+                <h1 class="text-xs font-black text-accent italic uppercase app-name-display">Agora</h1>
                 <span class="text-[8px] font-black tracking-wider bg-orange-100 text-accent px-1.5 py-0.5 rounded-full uppercase">v2.0</span>
             </div>
             <div id="mobile-lang-container" class="scale-90"></div>
@@ -105,6 +111,9 @@
     <script src="js/config.js"></script>
     <script src="js/translations.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/photo.js"></script>
+    <script src="js/activation.js"></script>
+    <script src="js/backup.js"></script>
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/tablet-zoom.js"></script>

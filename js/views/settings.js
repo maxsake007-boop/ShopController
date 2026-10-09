@@ -27,6 +27,52 @@ window.renderSettings = () => `
             </div>
         </div>
 
+        <!-- Backup & Restore Section -->
+        <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
+            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5 flex items-center justify-between">
+                <span>${state.lang === 'ru' ? 'Резервное копирование' : 'Zaxira nusxasi'}</span>
+                <span class="text-[9px] font-bold text-accent bg-orange-50 px-2 py-0.5 rounded-full uppercase tracking-wider">IndexedDB</span>
+            </h3>
+            <p class="text-xs text-slate-500 font-medium leading-relaxed">
+                ${state.lang === 'ru' 
+                    ? 'Сохраните копию всех данных (склад, продажи, долги, фотографии и лицензию) в один файл на случай очистки истории браузера.' 
+                    : 'Barcha ma\'lumotlar (ombor, sotuvlar, qarzlar, fotosuratlar va litsenziya) nusxasini bitta faylga saqlang.'}
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button type="button" onclick="exportBackup()" class="min-h-[44px] bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all cursor-pointer">
+                    <i data-lucide="download" class="w-4 h-4 text-accent"></i>
+                    <span>${state.lang === 'ru' ? 'Сохранить копию' : 'Nusxani saqlash'}</span>
+                </button>
+
+                <input type="file" id="settings-restore-file" accept=".json,application/json" class="hidden" onchange="handleSettingsRestoreSelect(event)">
+                <button type="button" onclick="document.getElementById('settings-restore-file').click()" class="min-h-[44px] bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xs active:scale-95 transition-all cursor-pointer">
+                    <i data-lucide="upload" class="w-4 h-4 text-slate-500"></i>
+                    <span>${state.lang === 'ru' ? 'Восстановить из копии' : 'Nusxadan tiklash'}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- License & System Info -->
+        <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5 flex items-center justify-between">
+                <span>${state.lang === 'ru' ? 'Лицензия и устройство' : 'Litsenziya va qurilma'}</span>
+                <span class="flex items-center gap-1 text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full uppercase">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    ${state.lang === 'ru' ? 'Активна' : 'Faol'}
+                </span>
+            </h3>
+            <div class="text-xs space-y-1.5 text-slate-500">
+                <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                    <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Клиент' : 'Mijoz'}:</span>
+                    <span class="font-black text-slate-800">${window.CLIENT_CONFIG?.shopName || 'ShopRuler'}</span>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                    <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Хранилище' : 'Xotira'}:</span>
+                    <span class="font-bold text-slate-700">IndexedDB (Offline)</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Danger Zone -->
         <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-red-200 shadow-sm space-y-3 sm:space-y-4">
             <h3 class="text-xs font-black uppercase text-red-500 tracking-wide border-b border-red-100 pb-1.5 mb-2.5">
@@ -41,7 +87,7 @@ window.renderSettings = () => `
                         ${state.lang === 'ru' ? 'Удаление всех продаж и расходов. Склад и долги останутся нетронутыми.' : 'Barcha sotuvlar va xarajatlarni o\'chirish. Ombor va qarzlar saqlab qolinadi.'}
                     </p>
                 </div>
-                <button onclick="openClearDataModal()" class="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-xl font-black uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-h-[38px]">
+                <button onclick="openClearDataModal()" class="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-xl font-black uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-h-[38px] cursor-pointer">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     <span>${state.lang === 'ru' ? 'Очистить данные' : 'O\'chirish'}</span>
                 </button>
@@ -56,18 +102,18 @@ window.updateSettings = async (key, val) => {
     render();
 };
 
+window.handleSettingsRestoreSelect = (event) => {
+    const file = event.target.files?.[0];
+    if (file && window.restoreBackup) {
+        window.restoreBackup(file);
+    }
+    event.target.value = '';
+};
+
 window.exportData = () => {
-    const dataStr = JSON.stringify(state, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `nmn_backup_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast(state.lang === 'ru' ? '✅ Данные экспортированы' : '✅ Ma\'lumotlar eksport qilindi');
+    if (window.exportBackup) {
+        window.exportBackup();
+    }
 };
 
 window.confirmResetAll = async () => {

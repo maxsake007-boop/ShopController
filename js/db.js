@@ -1,4 +1,8 @@
-// --- DATABASE LAYER (Dexie.js) ---
+// =============================================================================
+//                    DATABASE LAYER (Dexie.js / IndexedDB)
+// =============================================================================
+
+// Используем существующую базу данных и схему
 const db = new Dexie("ShopDatabase");
 db.version(1).stores({
     products: "++id, name, price, ost",
@@ -10,117 +14,195 @@ db.version(1).stores({
 
 window.db = db;
 
-// Data migration from legacy localStorage to IndexedDB
+// Безопасная и идемпотентная миграция данных из legacy localStorage
 window.migrateFromLocalStorage = async () => {
-    const oldProducts = localStorage.getItem('mpro_products');
-    const oldSales = localStorage.getItem('mpro_sales');
-    const oldDebts = localStorage.getItem('mpro_debts');
-    const oldExpenses = localStorage.getItem('mpro_expenses');
-    const oldSettings = localStorage.getItem('mpro_settings');
-    const oldLang = localStorage.getItem('mpro_lang');
+    try {
+        // Проверяем, не выполнялась ли полная миграция ранее
+        const migrationFlag = await db.settings.get('migrated_from_localstorage');
+        if (migrationFlag && migrationFlag.value) {
+            return false;
+        }
 
-    let migratedAny = false;
+        const rawKeys = {
+            products: localStorage.getItem('mpro_products'),
+            sales: localStorage.getItem('mpro_sales'),
+            debts: localStorage.getItem('mpro_debts'),
+            expenses: localStorage.getItem('mpro_expenses'),
+            settings: localStorage.getItem('mpro_settings'),
+            lang: localStorage.getItem('mpro_lang')
+        };
 
-    if (oldProducts || oldSales || oldDebts || oldExpenses || oldSettings) {
-        migratedAny = true;
-        
+        const hasAnyOldData = Object.values(rawKeys).some(val => val !== null);
+        if (!hasAnyOldData) {
+            return false;
+        }
+
+        console.log('[Migration] Обнаружены данные в localStorage. Запуск безопасного переноса...');
+
+        const parsed = {
+            products: null,
+            sales: null,
+            debts: null,
+            expenses: null,
+            settings: null,
+            lang: null
+        };
+        const failedKeys = [];
+
+        // 1. Безопасный предварительный парсинг каждой сущности
+        if (rawKeys.products) {
+            try {
+                const arr = JSON.parse(rawKeys.products);
+                if (Array.isArray(arr)) {
+                    parsed.products = arr.map(p => {
+                        const initialStock = p.stock !== undefined ? p.stock : (p.ost !== undefined ? p.ost : 0);
+                        return {
+                            id: p.id ? (isNaN(Number(p.id)) ? undefined : Number(p.id)) : undefined,
+                            name: p.name || '',
+                            price: p.salePrice || p.price || 0,
+                            ost: initialStock,
+                            salePrice: p.salePrice || p.price || 0,
+                            purchasePrice: p.purchasePrice || 0,
+                            stock: initialStock,
+                            photoUrl: p.photoUrl || '',
+                            photoBlob: null
+                        };
+                    });
+                }
+            } catch (e) {
+                console.error('[Migration] Ошибка парсинга mpro_products:', e);
+                failedKeys.push('mpro_products');
+            }
+        }
+
+        if (rawKeys.sales) {
+            try {
+                const arr = JSON.parse(rawKeys.sales);
+                if (Array.isArray(arr)) {
+                    parsed.sales = arr.map(s => ({
+                        id: s.id ? (isNaN(Number(s.id)) ? undefined : Number(s.id)) : undefined,
+                        date: s.timestamp || s.date || Date.now(),
+                        total: s.total || 0,
+                        payment_method: s.paymentType || s.payment_method || 'cash',
+                        timestamp: s.timestamp || s.date || Date.now(),
+                        paymentType: s.paymentType || s.payment_method || 'cash',
+                        clientName: s.clientName || '',
+                        items: s.items || [],
+                        displayTimestamp: s.displayTimestamp || ''
+                    }));
+                }
+            } catch (e) {
+                console.error('[Migration] Ошибка парсинга mpro_sales:', e);
+                failedKeys.push('mpro_sales');
+            }
+        }
+
+        if (rawKeys.debts) {
+            try {
+                const arr = JSON.parse(rawKeys.debts);
+                if (Array.isArray(arr)) {
+                    parsed.debts = arr.map(d => {
+                        const totalDebt = d.transactions?.reduce((sum, t) => t.type === 'debt' ? sum + t.amount : sum, 0) || 0;
+                        const totalPaid = d.transactions?.reduce((sum, t) => t.type === 'payment' ? sum + t.amount : sum, 0) || 0;
+                        const balance = totalDebt - totalPaid;
+                        return {
+                            id: d.id ? (isNaN(Number(d.id)) ? undefined : Number(d.id)) : undefined,
+                            name: d.clientName || d.name || '',
+                            debt: balance,
+                            clientName: d.clientName || d.name || '',
+                            transactions: d.transactions || []
+                        };
+                    });
+                }
+            } catch (e) {
+                console.error('[Migration] Ошибка парсинга mpro_debts:', e);
+                failedKeys.push('mpro_debts');
+            }
+        }
+
+        if (rawKeys.expenses) {
+            try {
+                const arr = JSON.parse(rawKeys.expenses);
+                if (Array.isArray(arr)) {
+                    parsed.expenses = arr.map(e => ({
+                        id: e.id ? (isNaN(Number(e.id)) ? undefined : Number(e.id)) : undefined,
+                        timestamp: e.timestamp || Date.now(),
+                        amount: e.amount || 0,
+                        note: e.note || ''
+                    }));
+                }
+            } catch (e) {
+                console.error('[Migration] Ошибка парсинга mpro_expenses:', e);
+                failedKeys.push('mpro_expenses');
+            }
+        }
+
+        if (rawKeys.settings) {
+            try {
+                parsed.settings = JSON.parse(rawKeys.settings);
+            } catch (e) {
+                console.error('[Migration] Ошибка парсинга mpro_settings:', e);
+                failedKeys.push('mpro_settings');
+            }
+        }
+
+        if (rawKeys.lang) {
+            parsed.lang = rawKeys.lang;
+        }
+
+        const successfullyMigratedKeys = [];
+
+        // 2. Атомарная запись в IndexedDB
         await db.transaction('rw', [db.products, db.sales, db.debtors, db.expenses, db.settings], async () => {
-            if (oldProducts) {
-                try {
-                    const products = JSON.parse(oldProducts);
-                    if (Array.isArray(products) && products.length > 0) {
-                        const items = products.map(p => {
-                            const initialStock = p.stock !== undefined ? p.stock : (p.ost !== undefined ? p.ost : 0);
-                            return {
-                                id: p.id ? (isNaN(Number(p.id)) ? undefined : Number(p.id)) : undefined,
-                                name: p.name || '',
-                                price: p.salePrice || p.price || 0,
-                                ost: initialStock,
-                                salePrice: p.salePrice || p.price || 0,
-                                purchasePrice: p.purchasePrice || 0,
-                                stock: initialStock,
-                                photoUrl: p.photoUrl || ''
-                            };
-                        });
-                        await db.products.bulkAdd(items);
-                    }
-                } catch (e) { console.error('Migration error (products):', e); }
+            if (parsed.products && parsed.products.length > 0) {
+                await db.products.bulkAdd(parsed.products);
+                successfullyMigratedKeys.push('mpro_products');
+            }
+            if (parsed.sales && parsed.sales.length > 0) {
+                await db.sales.bulkAdd(parsed.sales);
+                successfullyMigratedKeys.push('mpro_sales');
+            }
+            if (parsed.debts && parsed.debts.length > 0) {
+                await db.debtors.bulkAdd(parsed.debts);
+                successfullyMigratedKeys.push('mpro_debts');
+            }
+            if (parsed.expenses && parsed.expenses.length > 0) {
+                await db.expenses.bulkAdd(parsed.expenses);
+                successfullyMigratedKeys.push('mpro_expenses');
+            }
+            if (parsed.settings) {
+                if (parsed.settings.appName) await db.settings.put({ key: 'appName', value: parsed.settings.appName });
+                if (parsed.settings.currency) await db.settings.put({ key: 'currency', value: parsed.settings.currency });
+                successfullyMigratedKeys.push('mpro_settings');
+            }
+            if (parsed.lang) {
+                await db.settings.put({ key: 'lang', value: parsed.lang });
+                successfullyMigratedKeys.push('mpro_lang');
             }
 
-            if (oldSales) {
-                try {
-                    const sales = JSON.parse(oldSales);
-                    if (Array.isArray(sales) && sales.length > 0) {
-                        const items = sales.map(s => ({
-                            id: s.id ? (isNaN(Number(s.id)) ? undefined : Number(s.id)) : undefined,
-                            date: s.timestamp || s.date || Date.now(),
-                            total: s.total || 0,
-                            payment_method: s.paymentType || s.payment_method || 'cash',
-                            timestamp: s.timestamp || s.date || Date.now(),
-                            paymentType: s.paymentType || s.payment_method || 'cash',
-                            clientName: s.clientName || '',
-                            items: s.items || [],
-                            displayTimestamp: s.displayTimestamp || ''
-                        }));
-                        await db.sales.bulkAdd(items);
-                    }
-                } catch (e) { console.error('Migration error (sales):', e); }
-            }
-
-            if (oldDebts) {
-                try {
-                    const debts = JSON.parse(oldDebts);
-                    if (Array.isArray(debts) && debts.length > 0) {
-                        const items = debts.map(d => {
-                            const totalDebt = d.transactions?.reduce((sum, t) => t.type === 'debt' ? sum + t.amount : sum, 0) || 0;
-                            const totalPaid = d.transactions?.reduce((sum, t) => t.type === 'payment' ? sum + t.amount : sum, 0) || 0;
-                            const balance = totalDebt - totalPaid;
-                            return {
-                                id: d.id ? (isNaN(Number(d.id)) ? undefined : Number(d.id)) : undefined,
-                                name: d.clientName || d.name || '',
-                                debt: balance,
-                                clientName: d.clientName || d.name || '',
-                                transactions: d.transactions || []
-                            };
-                        });
-                        await db.debtors.bulkAdd(items);
-                    }
-                } catch (e) { console.error('Migration error (debts):', e); }
-            }
-
-            if (oldExpenses) {
-                try {
-                    const expenses = JSON.parse(oldExpenses);
-                    if (Array.isArray(expenses) && expenses.length > 0) {
-                        const items = expenses.map(e => ({
-                            id: e.id ? (isNaN(Number(e.id)) ? undefined : Number(e.id)) : undefined,
-                            timestamp: e.timestamp || Date.now(),
-                            amount: e.amount || 0,
-                            note: e.note || ''
-                        }));
-                        await db.expenses.bulkAdd(items);
-                    }
-                } catch (e) { console.error('Migration error (expenses):', e); }
-            }
-
-            if (oldSettings) {
-                try {
-                    const settings = JSON.parse(oldSettings);
-                    if (settings.appName) await db.settings.put({ key: 'appName', value: settings.appName });
-                    if (settings.currency) await db.settings.put({ key: 'currency', value: settings.currency });
-                } catch (e) { console.error('Migration error (settings):', e); }
-            }
-            if (oldLang) {
-                await db.settings.put({ key: 'lang', value: oldLang });
+            // Отметку о завершении ставим только если ВСЕ ключи успешно перенесены
+            if (failedKeys.length === 0) {
+                await db.settings.put({ key: 'migrated_from_localstorage', value: true });
             }
         });
 
-        localStorage.clear();
+        // 3. Безопасное точечное удаление ТОЛЬКО тех ключей, которые гарантированно записаны
+        successfullyMigratedKeys.forEach(k => {
+            localStorage.removeItem(k);
+        });
+
+        if (failedKeys.length > 0) {
+            console.warn('[Migration] Часть ключей не перенесена из-за ошибок парсинга и сохранена в localStorage:', failedKeys);
+        }
+
+        return successfullyMigratedKeys.length > 0;
+    } catch (err) {
+        console.error('[Migration] Критическая ошибка миграции:', err);
+        return false;
     }
-    return migratedAny;
 };
 
-// Load database collections into active in-memory state
+// Загрузка коллекций IndexedDB в рабочее состояние памяти
 window.loadStateFromDb = async () => {
     const products = await db.products.toArray();
     const sales = await db.sales.toArray();
@@ -143,7 +225,8 @@ window.loadStateFromDb = async () => {
             stock: currentStock,
             price: p.price || p.salePrice || 0,
             ost: currentStock,
-            photoUrl: p.photoUrl || ''
+            photoUrl: p.photoUrl || '',
+            photoBlob: p.photoBlob || null
         };
     });
 
@@ -165,7 +248,7 @@ window.loadStateFromDb = async () => {
         transactions: d.transactions || []
     }));
 
-    // Backfill items for older transactions if missing
+    // Автоматическое заполнение товаров для старых транзакций
     let changedDebts = false;
     for (const d of debtors) {
         let clientChanged = false;
@@ -201,14 +284,14 @@ window.loadStateFromDb = async () => {
     })).sort((a, b) => b.timestamp - a.timestamp);
 
     state.settings = {
-        appName: settingsObj.appName || 'NMN',
+        appName: settingsObj.appName || window.CLIENT_CONFIG?.shopName || 'NMN',
         currency: settingsObj.currency || 'сум'
     };
     
-    state.lang = settingsObj.lang || localStorage.getItem('mpro_lang') || 'ru';
+    state.lang = settingsObj.lang || 'ru';
 };
 
-// High-performance state persistence using bulk operations
+// Сохранение текущего состояния памяти в IndexedDB (Dexie)
 window.saveState = async () => {
     await db.transaction('rw', [db.products, db.sales, db.debtors, db.expenses, db.settings], async () => {
         // Products
@@ -223,7 +306,8 @@ window.saveState = async () => {
                 salePrice: p.salePrice || p.price || 0,
                 purchasePrice: p.purchasePrice || 0,
                 stock: currentStock,
-                photoUrl: p.photoUrl || ''
+                photoUrl: p.photoUrl || '',
+                photoBlob: p.photoBlob || null
             };
         });
         if (productsToPut.length > 0) {
@@ -278,7 +362,7 @@ window.saveState = async () => {
         }
 
         // Settings
-        await db.settings.put({ key: 'appName', value: state.settings.appName || 'NMN' });
+        await db.settings.put({ key: 'appName', value: state.settings.appName || window.CLIENT_CONFIG?.shopName || 'NMN' });
         await db.settings.put({ key: 'currency', value: state.settings.currency || 'сум' });
         await db.settings.put({ key: 'lang', value: state.lang || 'ru' });
     });
