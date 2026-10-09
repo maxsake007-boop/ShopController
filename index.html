@@ -2966,55 +2966,27 @@
 
             showToast(state.lang === 'ru' ? '⏳ Формирование PDF отчета...' : '⏳ PDF hisobot tayyorlanmoqda...');
 
-            // Temporarily reset zoom so html2canvas computes exact unscaled coordinates
+            // 1. Temporarily neutralize tablet zoom using !important on document & body so html2canvas computes exact unscaled coordinates
             const prevBodyZoom = document.body.style.zoom;
             const prevHtmlZoom = document.documentElement.style.zoom;
-            document.body.style.zoom = '1';
-            document.documentElement.style.zoom = '1';
+            document.documentElement.style.setProperty('--tablet-zoom', '1', 'important');
+            document.documentElement.style.setProperty('zoom', '1', 'important');
+            document.body.style.setProperty('zoom', '1', 'important');
 
-            // Create an isolated export container inside document.body at positive coordinates
-            // but under the modal overlay (z-index: 50, whereas modal overlay is z-[9999])
-            const exportContainer = document.createElement('div');
-            exportContainer.id = 'pdf-render-export-container';
-            exportContainer.style.cssText = `
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 794px !important;
-                min-width: 794px !important;
-                max-width: 794px !important;
-                margin: 0 !important;
-                padding: 24px !important;
-                background: #F8F9FA !important;
-                color: #0f172a !important;
-                zoom: 1 !important;
-                transform: none !important;
-                box-sizing: border-box !important;
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-                letter-spacing: normal !important;
-                line-height: 1.4 !important;
-                z-index: 50 !important;
-                overflow: visible !important;
-            `;
-
-            // Clone report content into isolated container
-            const clone = paper.cloneNode(true);
-            clone.style.width = '100%';
-            clone.style.maxWidth = '100%';
-            clone.style.margin = '0';
-            clone.style.padding = '0';
-            clone.style.boxShadow = 'none';
-            clone.style.border = 'none';
-            clone.style.background = 'transparent';
-            clone.style.zoom = '1';
-            clone.style.transform = 'none';
-            clone.style.color = '#0f172a';
-
-            exportContainer.appendChild(clone);
-            document.body.appendChild(exportContainer);
+            // 2. Temporarily inject a style rule that resets letter-spacing and ligatures to 0 inside the report
+            // This prevents html2canvas from splitting text into individual misaligned glyphs, allowing native canvas fillText rendering!
+            const styleTag = document.createElement('style');
+            styleTag.id = 'temp-pdf-no-letter-spacing';
+            styleTag.textContent = '#report-paper-inner, #report-paper-inner * { letter-spacing: 0 !important; font-feature-settings: normal !important; font-variant-ligatures: normal !important; }';
+            document.head.appendChild(styleTag);
 
             try {
                 if (typeof html2pdf !== 'undefined') {
+                    // Make sure fonts are ready
+                    if (document.fonts && document.fonts.ready) {
+                        await document.fonts.ready;
+                    }
+
                     const opt = {
                         margin: [8, 8, 8, 8],
                         filename: `Отчет_${fileSuffix}.pdf`,
@@ -3022,9 +2994,7 @@
                         html2canvas: {
                             scale: 2,
                             useCORS: true,
-                            letterRendering: false,
                             logging: false,
-                            windowWidth: 794,
                             scrollY: 0,
                             scrollX: 0
                         },
@@ -3036,7 +3006,7 @@
                         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                     };
 
-                    await html2pdf().set(opt).from(exportContainer).save();
+                    await html2pdf().set(opt).from(paper).save();
                     showToast(state.lang === 'ru' ? '✅ PDF отчет скачан в папку «Загрузки»!' : '✅ PDF hisobot «Yuklamalar» papkasiga saqlandi!');
                 } else {
                     throw new Error('Библиотека html2pdf не загружена');
@@ -3046,10 +3016,19 @@
                 showToast(state.lang === 'ru' ? '⚠️ Ошибка прямого скачивания, открытие печати...' : '⚠️ Xatolik yuz berdi, chop etish ochilmoqda...');
                 triggerPrintFromReport();
             } finally {
-                document.body.style.zoom = prevBodyZoom;
-                document.documentElement.style.zoom = prevHtmlZoom;
-                if (exportContainer && exportContainer.parentNode) {
-                    exportContainer.parentNode.removeChild(exportContainer);
+                if (styleTag && styleTag.parentNode) {
+                    styleTag.parentNode.removeChild(styleTag);
+                }
+                document.documentElement.style.removeProperty('--tablet-zoom');
+                if (prevHtmlZoom) {
+                    document.documentElement.style.setProperty('zoom', prevHtmlZoom);
+                } else {
+                    document.documentElement.style.removeProperty('zoom');
+                }
+                if (prevBodyZoom) {
+                    document.body.style.setProperty('zoom', prevBodyZoom);
+                } else {
+                    document.body.style.removeProperty('zoom');
                 }
             }
         };
