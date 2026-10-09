@@ -12,13 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
-    <!-- html2pdf for direct client-side PDF export on tablets & mobile (offline + CDN fallback) -->
-    <script src="html2pdf.bundle.min.js"></script>
-    <script>
-        if (typeof html2pdf === 'undefined') {
-            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>');
-        }
-    </script>
+    <!-- Dexie, Chart.js, Lucide -->
     <script>
         tailwind.config = {
             theme: {
@@ -2873,7 +2867,7 @@
                 </div>
 
                 <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
-                    <h3 class="text-xs font-black uppercase text-slate-450 tracking-wide border-b pb-1.5 mb-2.5">${state.lang === 'ru' ? 'Печать и скачивание отчетов PDF' : 'PDF hisobotlarni yuklab olish va chop etish'}</h3>
+                    <h3 class="text-xs font-black uppercase text-slate-450 tracking-wide border-b pb-1.5 mb-2.5">${state.lang === 'ru' ? 'Печать отчетов' : 'Hisobotlarni chop etish'}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                         <button onclick="openPdfReportModal('month')" class="py-2.5 sm:py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-750 rounded-xl font-black uppercase text-[11px] sm:text-xs tracking-wider transition-all flex flex-col items-center justify-center gap-1.5 shadow-sm active:scale-95 min-h-[44px] cursor-pointer">
                             <i data-lucide="calendar-days" class="w-4 h-4 sm:w-5 sm:h-5 text-accent animate-pulse-slow"></i>
@@ -2957,79 +2951,6 @@
                 window.print();
             } catch (err) {
                 console.error('Print failed:', err);
-            }
-        };
-
-        window.downloadPdfReport = async (fileSuffix) => {
-            const paper = document.getElementById('report-paper-inner');
-            if (!paper) return;
-
-            showToast(state.lang === 'ru' ? '⏳ Формирование PDF отчета...' : '⏳ PDF hisobot tayyorlanmoqda...');
-
-            // 1. Temporarily neutralize tablet zoom using !important on document & body so html2canvas computes exact unscaled coordinates
-            const prevBodyZoom = document.body.style.zoom;
-            const prevHtmlZoom = document.documentElement.style.zoom;
-            document.documentElement.style.setProperty('--tablet-zoom', '1', 'important');
-            document.documentElement.style.setProperty('zoom', '1', 'important');
-            document.body.style.setProperty('zoom', '1', 'important');
-
-            // 2. Temporarily inject a style rule that resets letter-spacing and ligatures to 0 inside the report
-            // This prevents html2canvas from splitting text into individual misaligned glyphs, allowing native canvas fillText rendering!
-            const styleTag = document.createElement('style');
-            styleTag.id = 'temp-pdf-no-letter-spacing';
-            styleTag.textContent = '#report-paper-inner, #report-paper-inner * { letter-spacing: 0 !important; font-feature-settings: normal !important; font-variant-ligatures: normal !important; }';
-            document.head.appendChild(styleTag);
-
-            try {
-                if (typeof html2pdf !== 'undefined') {
-                    // Make sure fonts are ready
-                    if (document.fonts && document.fonts.ready) {
-                        await document.fonts.ready;
-                    }
-
-                    const opt = {
-                        margin: [8, 8, 8, 8],
-                        filename: `Отчет_${fileSuffix}.pdf`,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: {
-                            scale: 2,
-                            useCORS: true,
-                            logging: false,
-                            scrollY: 0,
-                            scrollX: 0
-                        },
-                        jsPDF: {
-                            unit: 'mm',
-                            format: 'a4',
-                            orientation: 'portrait'
-                        },
-                        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-                    };
-
-                    await html2pdf().set(opt).from(paper).save();
-                    showToast(state.lang === 'ru' ? '✅ PDF отчет скачан в папку «Загрузки»!' : '✅ PDF hisobot «Yuklamalar» papkasiga saqlandi!');
-                } else {
-                    throw new Error('Библиотека html2pdf не загружена');
-                }
-            } catch (err) {
-                console.error('PDF export error:', err);
-                showToast(state.lang === 'ru' ? '⚠️ Ошибка прямого скачивания, открытие печати...' : '⚠️ Xatolik yuz berdi, chop etish ochilmoqda...');
-                triggerPrintFromReport();
-            } finally {
-                if (styleTag && styleTag.parentNode) {
-                    styleTag.parentNode.removeChild(styleTag);
-                }
-                document.documentElement.style.removeProperty('--tablet-zoom');
-                if (prevHtmlZoom) {
-                    document.documentElement.style.setProperty('zoom', prevHtmlZoom);
-                } else {
-                    document.documentElement.style.removeProperty('zoom');
-                }
-                if (prevBodyZoom) {
-                    document.body.style.setProperty('zoom', prevBodyZoom);
-                } else {
-                    document.body.style.removeProperty('zoom');
-                }
             }
         };
 
@@ -3144,7 +3065,7 @@
                 
                 const onTabletOrMobile = isMobileOrTablet();
                 printContainer.className = onTabletOrMobile 
-                    ? 'fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] overflow-y-auto custom-scrollbar flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 text-slate-900'
+                    ? 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[9999] overflow-y-auto custom-scrollbar flex flex-col items-center justify-start p-2.5 sm:p-4 text-slate-900'
                     : 'print-only';
                 
                 let lastMonthKey = null;
@@ -3152,61 +3073,55 @@
                 printContainer.innerHTML = `
                     <!-- Screen Action Toolbar (Hidden in Print, visible on tablets/mobile) -->
                     ${onTabletOrMobile ? `
-                    <div class="w-full max-w-4xl flex flex-wrap items-center justify-between pb-3 pt-1 no-print gap-2 flex-shrink-0">
-                        <button onclick="closePdfReport()" class="px-3.5 sm:px-4 py-2 bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all min-h-[40px] cursor-pointer">
+                    <div class="sticky top-0 z-50 w-full max-w-3xl flex items-center justify-between py-2 px-3 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-slate-200/80 mb-3 flex-shrink-0 no-print">
+                        <button onclick="closePdfReport()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 active:scale-95 transition-all min-h-[40px] cursor-pointer">
                             <i data-lucide="arrow-left" class="w-4 h-4 text-slate-500"></i>
                             <span>${state.lang === 'ru' ? 'Назад в настройки' : 'Sozlamalarga qaytish'}</span>
                         </button>
-                        <div class="flex items-center gap-2">
-                            <button onclick="downloadPdfReport('${fileSuffix}')" class="px-4 sm:px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all min-h-[42px] cursor-pointer">
-                                <i data-lucide="download" class="w-4 h-4"></i>
-                                <span>${state.lang === 'ru' ? 'Скачать PDF' : 'PDF yuklab olish'}</span>
-                            </button>
-                            <button onclick="triggerPrintFromReport()" class="px-4 sm:px-5 py-2.5 bg-accent hover:bg-orange-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-orange-500/30 transition-all min-h-[42px] cursor-pointer">
-                                <i data-lucide="printer" class="w-4 h-4"></i>
-                                <span>${state.lang === 'ru' ? 'Распечатать PDF' : 'Chop etish (PDF)'}</span>
-                            </button>
-                        </div>
+                        <button onclick="triggerPrintFromReport()" class="px-5 py-2 bg-accent hover:bg-orange-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-orange-500/25 transition-all min-h-[40px] cursor-pointer">
+                            <i data-lucide="printer" class="w-4 h-4"></i>
+                            <span>${state.lang === 'ru' ? 'Распечатать PDF' : 'Chop etish (PDF)'}</span>
+                        </button>
                     </div>
                     ` : ''}
 
                     <!-- Printable Paper Report -->
-                    <div id="report-paper-inner" class="w-full max-w-4xl bg-[#F8F9FA] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl border border-slate-200/80 mb-10 report-paper-content flex-shrink-0" style="font-family: 'Inter', sans-serif; color: #0f172a !important;">
+                    <div id="report-paper-inner" class="w-full max-w-3xl bg-[#F8F9FA] rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border border-slate-200/80 mb-8 report-paper-content flex-shrink-0" style="font-family: 'Inter', sans-serif; color: #0f172a !important; box-sizing: border-box;">
                         <!-- Report Header -->
-                        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 text-center mb-6 sm:mb-8 shadow-sm">
-                            <div class="flex items-center justify-center gap-2.5 mb-2">
-                                <div class="w-10 h-10 bg-orange-100 text-accent rounded-2xl flex items-center justify-center">
-                                    <i data-lucide="store" class="w-5 h-5 text-accent"></i>
+                        <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 text-center mb-4 sm:mb-5 shadow-sm">
+                            <div class="flex items-center justify-center gap-2 mb-1.5">
+                                <div class="w-8 h-8 bg-orange-100 text-accent rounded-xl flex items-center justify-center">
+                                    <i data-lucide="store" class="w-4 h-4 text-accent"></i>
                                 </div>
-                                <h1 class="text-2xl font-black uppercase tracking-tight text-slate-800 italic">${state.settings.appName || 'МАГАЗИН'}</h1>
+                                <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-800 italic">${state.settings.appName || 'МАГАЗИН'}</h1>
                             </div>
                             <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mt-1">
                                 ${state.lang === 'ru' ? 'Отчёт по продажам и личным расходам' : 'Sotuvlar va shaxsiy xarajatlar hisoboti'}
                             </h2>
-                            <h3 class="text-lg font-black mt-3 text-slate-800 uppercase tracking-wide">${titleLabel}</h3>
-                            <div class="text-[9.5px] text-gray-400 mt-2.5 uppercase tracking-widest font-black flex items-center justify-center gap-1.5 bg-slate-50 py-1.5 px-4 rounded-xl w-max mx-auto border border-slate-100">
+                            <h3 class="text-base font-black mt-2 text-slate-800 uppercase tracking-wide">${titleLabel}</h3>
+                            <div class="text-[9.5px] text-gray-400 mt-2 uppercase tracking-widest font-black flex items-center justify-center gap-1.5 bg-slate-50 py-1 px-3 rounded-lg w-max mx-auto border border-slate-100">
                                 <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
                                 ${state.lang === 'ru' ? 'Сформировано' : 'Yaratilgan vaqt'}: ${new Date().toLocaleString(state.lang === 'ru' ? 'ru-RU' : 'uz-UZ')}
                             </div>
                         </div>
                         
                         <!-- Stats Section (Robust Flex KPI Cards) -->
-                        <div style="display: flex; gap: 10px; margin-bottom: 24px; width: 100%; box-sizing: border-box; page-break-inside: avoid !important; break-inside: avoid !important;">
-                            <div style="flex: 1; min-width: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
-                                <div style="font-size: 9.5px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">${t('revenue')}</div>
-                                <div style="font-size: 15px; font-weight: 900; color: #0f172a; white-space: nowrap;">${formatPrice(totalClosed)}</div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 20px; width: 100%; box-sizing: border-box; page-break-inside: avoid !important; break-inside: avoid !important;">
+                            <div style="flex: 1; min-width: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                                <div style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${t('revenue')}</div>
+                                <div style="font-size: 14px; font-weight: 900; color: #0f172a; white-space: nowrap;">${formatPrice(totalClosed)}</div>
                             </div>
-                            <div style="flex: 1; min-width: 0; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 14px; padding: 12px 14px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
-                                <div style="font-size: 9.5px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">${t('profit')} 🎉</div>
-                                <div style="font-size: 15px; font-weight: 900; color: #065f46; white-space: nowrap;">${formatPrice(stats.profit)}</div>
+                            <div style="flex: 1; min-width: 0; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                                <div style="font-size: 9px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${t('profit')} 🎉</div>
+                                <div style="font-size: 14px; font-weight: 900; color: #065f46; white-space: nowrap;">${formatPrice(stats.profit)}</div>
                             </div>
-                            <div style="flex: 1; min-width: 0; background: #fef2f2; border: 1px solid #fecaca; border-radius: 14px; padding: 12px 14px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
-                                <div style="font-size: 9.5px; font-weight: 800; color: #dc2626; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">${t('personal_expenses')} 💸</div>
-                                <div style="font-size: 15px; font-weight: 900; color: #991b1b; white-space: nowrap;">${formatPrice(totalExpenses)}</div>
+                            <div style="flex: 1; min-width: 0; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                                <div style="font-size: 9px; font-weight: 800; color: #dc2626; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${t('personal_expenses')} 💸</div>
+                                <div style="font-size: 14px; font-weight: 900; color: #991b1b; white-space: nowrap;">${formatPrice(totalExpenses)}</div>
                             </div>
-                            <div style="flex: 1; min-width: 0; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 14px; padding: 12px 14px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
-                                <div style="font-size: 9.5px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">${state.lang === 'ru' ? 'Чистыми 💰' : 'Sof foyda 💰'}</div>
-                                <div style="font-size: 15px; font-weight: 900; color: #312e81; white-space: nowrap;">${formatPrice(stats.netProfit)}</div>
+                            <div style="flex: 1; min-width: 0; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 10px 12px; box-sizing: border-box; text-align: left; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                                <div style="font-size: 9px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${state.lang === 'ru' ? 'Чистыми 💰' : 'Sof foyda 💰'}</div>
+                                <div style="font-size: 14px; font-weight: 900; color: #312e81; white-space: nowrap;">${formatPrice(stats.netProfit)}</div>
                             </div>
                         </div>
 
