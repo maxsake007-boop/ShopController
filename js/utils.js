@@ -61,3 +61,31 @@ window.showToast = (msg) => {
         setTimeout(() => el.remove(), 300);
     }, 3000);
 };
+
+// Fullscreen controller for tablet POS kiosk mode
+window.toggleAppFullscreen = () => {
+    try {
+        const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        if (!isFull) {
+            const el = document.documentElement;
+            if (el.requestFullscreen) {
+                el.requestFullscreen().catch(() => {});
+            } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen();
+            } else if (el.mozRequestFullScreen) {
+                el.mozRequestFullScreen();
+            }
+            if (window.showToast) showToast('🖥️ Полноэкранный режим включен');
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            }
+        }
+    } catch (e) {
+        console.warn('Fullscreen error:', e);
+    }
+};
