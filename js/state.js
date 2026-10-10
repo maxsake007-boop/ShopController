@@ -6,7 +6,7 @@ window.state = {
     debts: [],
     expenses: [],
     settings: {
-        appName: 'NMN',
+        appName: window.CLIENT_CONFIG?.shopName || 'Agora',
         currency: 'сум'
     },
     activeTab: 'kassa',

@@ -284,7 +284,7 @@ window.loadStateFromDb = async () => {
     })).sort((a, b) => b.timestamp - a.timestamp);
 
     state.settings = {
-        appName: settingsObj.appName || window.CLIENT_CONFIG?.shopName || 'NMN',
+        appName: settingsObj.appName || window.CLIENT_CONFIG?.shopName || 'Agora',
         currency: settingsObj.currency || 'сум'
     };
     
@@ -362,7 +362,7 @@ window.saveState = async () => {
         }
 
         // Settings
-        await db.settings.put({ key: 'appName', value: state.settings.appName || window.CLIENT_CONFIG?.shopName || 'NMN' });
+        await db.settings.put({ key: 'appName', value: state.settings.appName || window.CLIENT_CONFIG?.shopName || 'Agora' });
         await db.settings.put({ key: 'currency', value: state.settings.currency || 'сум' });
         await db.settings.put({ key: 'lang', value: state.lang || 'ru' });
     });

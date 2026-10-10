@@ -6,32 +6,10 @@ window.renderSettings = () => `
             <i data-lucide="settings" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('settings')}
         </h2>
         
-        <!-- General Store Settings -->
-        <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5">
-                ${state.lang === 'ru' ? 'Основные' : 'Asosiylar'}
-            </h3>
-            <div class="space-y-3">
-                <label class="block">
-                    <span class="text-[10px] sm:text-[11px] font-black uppercase text-slate-400 mb-1 ml-1 block">
-                        ${state.lang === 'ru' ? 'Название приложения' : 'Ilova nomi'}
-                    </span>
-                    <input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent font-bold text-xs sm:text-sm text-slate-700 min-h-[38px]" value="${state.settings.appName}" onchange="updateSettings('appName', this.value)">
-                </label>
-                <label class="block">
-                    <span class="text-[10px] sm:text-[11px] font-black uppercase text-slate-400 mb-1 ml-1 block">
-                        ${state.lang === 'ru' ? 'Валюта' : 'Valyuta'}
-                    </span>
-                    <input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent font-bold text-xs sm:text-sm text-slate-700 min-h-[38px]" value="${state.settings.currency}" onchange="updateSettings('currency', this.value)">
-                </label>
-            </div>
-        </div>
-
         <!-- Backup & Restore Section -->
         <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
             <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5 flex items-center justify-between">
                 <span>${state.lang === 'ru' ? 'Резервное копирование' : 'Zaxira nusxasi'}</span>
-                <span class="text-[9px] font-bold text-accent bg-orange-50 px-2 py-0.5 rounded-full uppercase tracking-wider">IndexedDB</span>
             </h3>
             <p class="text-xs text-slate-500 font-medium leading-relaxed">
                 ${state.lang === 'ru' 
@@ -69,25 +47,15 @@ window.renderSettings = () => `
             </button>
         </div>
 
-        <!-- License & System Info -->
-        <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wide border-b pb-1.5 mb-2.5 flex items-center justify-between">
-                <span>${state.lang === 'ru' ? 'Лицензия и устройство' : 'Litsenziya va qurilma'}</span>
-                <span class="flex items-center gap-1 text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full uppercase">
-                    <i data-lucide="shield-check" class="w-3 h-3"></i>
-                    ${state.lang === 'ru' ? 'Активна' : 'Faol'}
-                </span>
+        <!-- License Section -->
+        <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <h3 class="text-xs font-black uppercase text-slate-500 tracking-wide">
+                ${state.lang === 'ru' ? 'Лицензия' : 'Litsenziya'}
             </h3>
-            <div class="text-xs space-y-1.5 text-slate-500">
-                <div class="flex justify-between items-center py-1 border-b border-slate-100">
-                    <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Клиент' : 'Mijoz'}:</span>
-                    <span class="font-black text-slate-800">${window.CLIENT_CONFIG?.shopName || 'Agora'}</span>
-                </div>
-                <div class="flex justify-between items-center py-1 border-b border-slate-100">
-                    <span class="font-bold text-slate-400 uppercase text-[10px]">${state.lang === 'ru' ? 'Хранилище' : 'Xotira'}:</span>
-                    <span class="font-bold text-slate-700">IndexedDB (Offline)</span>
-                </div>
-            </div>
+            <span class="flex items-center gap-1.5 text-[10px] sm:text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase border border-emerald-100">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                ${state.lang === 'ru' ? 'Активна' : 'Faol'}
+            </span>
         </div>
 
         <!-- Danger Zone -->
