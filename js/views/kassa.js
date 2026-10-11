@@ -295,6 +295,7 @@ window.commitSale = async (saleData) => {
 
     state.kassa.order = [];
     state.kassa.clientName = '';
+    state.kassa.mobileTab = 'catalog';
     document.getElementById('modal-container').innerHTML = '';
     await saveState();
     showToast(t('sale_complete_toast'));

@@ -106,8 +106,9 @@ input[type="number"]::-webkit-outer-spin-button {
     display: none;
 }
 
-/* Tablet Landscape & Kiosk Adaptation Rule (up to 1280x950 Viewport) */
-@media screen and (max-width: 1280px) and (max-height: 950px), screen and (max-width: 1024px) {
+/* Tablet Landscape & Kiosk Adaptation Rule (Tablets 641px-1280px in Landscape) */
+@media screen and (min-width: 641px) and (max-width: 1280px) and (max-height: 950px) and (orientation: landscape),
+       screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
     html {
         zoom: normal !important;
         font-size: 16px !important;
@@ -146,5 +147,64 @@ input[type="number"]::-webkit-outer-spin-button {
     .dashboard-chart-card {
         min-height: 300px !important;
         height: 320px !important;
+    }
+}
+
+/* === SMARTPHONE / MOBILE ADAPTATION (Samsung S22 Ultra & All Smartphones in Portrait) === */
+@media screen and (max-width: 767px) {
+    /* Prevent automatic browser zoom when focusing input fields */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+
+    /* Reserve space at bottom of viewport for fixed mobile navigation & safe area */
+    #app-main-area {
+        padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    /* Fixed bottom navigation bar with safe-area padding for Samsung gesture bar */
+    .mobile-nav {
+        height: calc(3.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Mobile header safe area */
+    .mobile-header {
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    /* Kassa Product Grid on Mobile: 2 clean columns */
+    .kassa-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.5rem !important;
+        align-content: start !important;
+        grid-auto-rows: max-content !important;
+    }
+
+    /* Product card image aspect ratio and max-height for mobile screens */
+    .kassa-product-grid .product-card .aspect-\[3\/4\] {
+        aspect-ratio: 1 / 1 !important;
+        max-height: 125px !important;
+    }
+
+    /* Kassa Cart Aside on Mobile: Full Width */
+    .kassa-cart-aside {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 1 1 0% !important;
+    }
+
+    /* Dashboard charts on mobile: comfortable height */
+    .dashboard-chart-card {
+        min-height: 250px !important;
+        height: 270px !important;
+    }
+
+    /* Touch targets and scrolling */
+    .touch-pan-y {
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch;
     }
 }

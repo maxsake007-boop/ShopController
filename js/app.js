@@ -28,9 +28,9 @@ window.renderNav = () => {
     const items = window.AppConfig?.NAV_ITEMS || window.NAV_ITEMS;
 
     const generateLinks = (isMobile) => items.map(item => `
-        <button onclick="switchTab('${item.id}')" class="${isMobile ? 'flex flex-col items-center justify-center gap-0.5 p-1 flex-1 min-w-0 min-h-[44px] overflow-hidden' : 'w-full max-w-[5rem] py-2 md:py-3.5 flex flex-col items-center justify-center gap-1 rounded-xl md:rounded-2xl nav-btn min-h-[44px]'} transition-all group ${state.activeTab === item.id ? (isMobile ? 'text-accent' : 'bg-orange-100 text-accent font-black') : 'text-slate-400 hover:bg-slate-50' }">
+        <button onclick="switchTab('${item.id}')" class="${isMobile ? 'flex flex-col items-center justify-center gap-0.5 p-1 flex-1 min-w-0 min-h-[44px] overflow-hidden' : 'w-full max-w-[5rem] py-2 md:py-3.5 flex flex-col items-center justify-center gap-1 rounded-xl md:rounded-2xl nav-btn min-h-[44px]'} transition-all group ${state.activeTab === item.id ? (isMobile ? 'text-accent font-black' : 'bg-orange-100 text-accent font-black') : 'text-slate-400 hover:bg-slate-50' }">
             <i data-lucide="${item.icon}" class="${isMobile ? 'w-4 h-4 flex-shrink-0' : 'w-5 h-5 md:w-6 md:h-6'} ${state.activeTab === item.id ? 'text-accent' : 'text-slate-400'}"></i>
-            <span class="${isMobile ? 'text-[8px] font-black uppercase tracking-wider text-center truncate w-full px-0.5' : 'text-[9px] md:text-[10px] font-black uppercase tracking-wider text-center'} ${state.activeTab === item.id ? 'text-accent' : 'text-slate-400'}">${t(item.id)}</span>
+            <span class="${isMobile ? 'text-[8.5px] font-black uppercase tracking-tight text-center truncate w-full px-0.5' : 'text-[9px] md:text-[10px] font-black uppercase tracking-wider text-center'} ${state.activeTab === item.id ? 'text-accent' : 'text-slate-400'}">${t(item.id)}</span>
         </button>
     `).join('');
 

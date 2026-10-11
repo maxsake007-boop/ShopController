@@ -15,7 +15,12 @@ let tabletZoomLevel = (() => {
 window.tabletZoomLevel = tabletZoomLevel;
 
 window.applyTabletZoom = () => {
-    const isTabletLandscape = (window.innerWidth <= 1280 && window.innerHeight <= 950) || (window.innerWidth <= 1024);
+    const isTabletLandscape = (
+        window.innerWidth >= 641 &&
+        window.innerWidth <= 1280 &&
+        window.innerHeight <= 950 &&
+        window.innerWidth > window.innerHeight
+    );
     const zoomText = `${Math.round(tabletZoomLevel * 100)}%`;
     const zoomValEl = document.getElementById('tablet-zoom-value');
     if (zoomValEl) {
@@ -82,6 +87,14 @@ let touchStartX = 0;
 let initialScrollTop = 0;
 
 document.addEventListener('touchstart', (e) => {
+    const isTabletLandscape = (
+        window.innerWidth >= 641 &&
+        window.innerWidth <= 1280 &&
+        window.innerHeight <= 950 &&
+        window.innerWidth > window.innerHeight
+    );
+    if (!isTabletLandscape) return;
+
     const main = document.getElementById('main-content');
     if (!main || (window.state && window.state.activeTab === 'kassa')) return;
     if (e.target.closest('button, a, #modal-container, #scanner-modal-container')) return;
@@ -103,8 +116,7 @@ document.addEventListener('touchmove', (e) => {
         // Allow horizontal table pan if horizontal motion is dominant
         if (diffX > Math.abs(diffY) + 8) return;
 
-        const isTabletLandscape = window.innerWidth <= 1024 && window.innerHeight <= 550;
-        const zoomFactor = isTabletLandscape ? (tabletZoomLevel || 0.70) : 1;
+        const zoomFactor = tabletZoomLevel || 0.70;
         main.scrollTop = initialScrollTop - (diffY / zoomFactor);
     }
 }, { passive: true });
