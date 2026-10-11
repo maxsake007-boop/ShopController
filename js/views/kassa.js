@@ -39,7 +39,7 @@ window.renderKassa = () => {
                         return `
                             <button onclick="addToOrder('${p.id}')" data-name="${p.name.toLowerCase()}" class="product-card bg-white p-2 sm:p-2.5 rounded-xl border-2 ${p.stock <= 0 ? 'border-dashed border-red-300 opacity-60 bg-red-50/10 cursor-not-allowed shadow-none' : p.stock <= 3 ? 'border-red-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all active:scale-95 text-left flex flex-col justify-between ${isVisible ? '' : 'hidden'} focus:outline-none focus:ring-0 select-none touch-manipulation">
                                 <div class="w-full">
-                                    <div class="w-full aspect-[3/4] max-h-[175px] sm:max-h-[195px] rounded-lg shadow-inner bg-slate-50 mb-1.5 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0">
+                                    <div class="product-img-box w-full aspect-[3/4] max-h-[175px] sm:max-h-[195px] rounded-lg shadow-inner bg-slate-50 mb-1.5 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden flex-shrink-0">
                                         ${photoSrc ? `<img src="${photoSrc}" class="w-full h-full object-contain p-1" alt="${p.name}" loading="lazy">` : '📦'}
                                     </div>
                                     <h3 class="font-bold text-xs sm:text-[13px] line-clamp-1 text-slate-800 leading-snug mb-1" title="${p.name}">${p.name}</h3>

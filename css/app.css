@@ -183,9 +183,10 @@ input[type="number"]::-webkit-outer-spin-button {
     }
 
     /* Product card image aspect ratio and max-height for mobile screens */
+    .kassa-product-grid .product-card .product-img-box,
     .kassa-product-grid .product-card .aspect-\[3\/4\] {
         aspect-ratio: 1 / 1 !important;
-        max-height: 125px !important;
+        max-height: 120px !important;
     }
 
     /* Kassa Cart Aside on Mobile: Full Width */
