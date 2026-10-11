@@ -7,29 +7,31 @@ window._currentAddPhotoBlob = null;
 window.renderSklad = () => `
     <div class="space-y-2.5 sm:space-y-4 pb-36 sm:pb-32 md:pb-20 sklad-page-content">
         <div class="flex justify-between items-center gap-2">
-            <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
+            <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2 flex-shrink-0">
                 <i data-lucide="package" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('sklad')}
             </h2>
-            <button onclick="toggleAddForm(true)" class="min-h-[44px] bg-accent text-white px-3 sm:px-5 py-2 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-1.5 hover:bg-orange-600 active:scale-95 transition-all text-xs uppercase tracking-widest shadow-sm cursor-pointer">
-                <i data-lucide="plus" class="w-4 h-4"></i> ${t('add_product')}
+            <button onclick="toggleAddForm(true)" class="min-h-[38px] sm:min-h-[44px] bg-accent text-white px-2.5 sm:px-5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-1 hover:bg-orange-600 active:scale-95 transition-all text-[11px] sm:text-xs uppercase tracking-wider shadow-sm cursor-pointer whitespace-nowrap flex-shrink-0">
+                <i data-lucide="plus" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span>${t('add_product')}</span>
             </button>
         </div>
         <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm overflow-hidden text-xs sm:text-sm">
             <div class="overflow-x-auto custom-scrollbar sklad-table-container">
-                <table class="w-full text-left font-sans min-w-[540px]">
-                    <thead class="sticky top-0 z-10 bg-slate-50 border-b text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-widest shadow-sm">
+                <table class="w-full text-left font-sans min-w-0 sm:min-w-[540px]">
+                    <thead class="sticky top-0 z-10 bg-slate-50 border-b text-[9px] sm:text-xs font-black uppercase text-slate-400 tracking-wider sm:tracking-widest shadow-sm">
                         <tr>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5">${t('photo')}</th>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5">${t('name')}</th>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5">${t('sale_short')}</th>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5 flex items-center gap-1.5">
-                                ${t('purchase_short')} 
-                                <button onclick="state.showPurchasePrices = !state.showPurchasePrices; render()" class="hover:text-accent transition-colors p-0.5">
-                                    <i data-lucide="${state.showPurchasePrices ? 'eye-off' : 'eye'}" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                                </button>
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-9 sm:w-12">${t('photo')}</th>
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5">${t('name')}</th>
+                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-16 sm:w-24">${t('sale_short')}</th>
+                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-16 sm:w-24">
+                                <div class="flex items-center gap-1">
+                                    <span>${t('purchase_short')}</span> 
+                                    <button onclick="state.showPurchasePrices = !state.showPurchasePrices; render()" class="hover:text-accent transition-colors p-0.5">
+                                        <i data-lucide="${state.showPurchasePrices ? 'eye-off' : 'eye'}" class="w-3 h-3 sm:w-4 sm:h-4"></i>
+                                    </button>
+                                </div>
                             </th>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5">${t('stock')}</th>
-                            <th class="py-2 px-2.5 sm:py-2.5 sm:px-3.5 text-right"></th>
+                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-10 sm:w-16">${t('stock')}</th>
+                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 text-right w-8 sm:w-10"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -37,34 +39,34 @@ window.renderSklad = () => `
                             const photoSrc = window.getPhotoSrc ? window.getPhotoSrc(p) : (p.photoUrl || '');
                             return `
                                 <tr class="hover:bg-slate-50/50 transition-colors group">
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5">
-                                        <div onclick="triggerChangePhoto('${p.id}')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-100 border border-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0 cursor-pointer hover:border-accent hover:opacity-85 transition-all" title="Нажмите, чтобы изменить фото">
-                                            ${photoSrc ? `<img src="${photoSrc}" class="w-full h-full object-cover" alt="${p.name}" loading="lazy">` : '<i data-lucide="package" class="w-4 h-4 text-slate-400"></i>'}
+                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5">
+                                        <div onclick="triggerChangePhoto('${p.id}')" class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-100 border border-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0 cursor-pointer hover:border-accent hover:opacity-85 transition-all" title="Нажмите, чтобы изменить фото">
+                                            ${photoSrc ? `<img src="${photoSrc}" class="w-full h-full object-cover" alt="${p.name}" loading="lazy">` : '<i data-lucide="package" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>'}
                                         </div>
                                     </td>
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5">
-                                        <input class="w-full bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-800 text-xs sm:text-sm py-1 min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${p.name}" onchange="editProduct('${p.id}', 'name', this.value)">
+                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5 min-w-0">
+                                        <input class="w-full bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-800 text-xs sm:text-sm py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${p.name}" onchange="editProduct('${p.id}', 'name', this.value)">
                                     </td>
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5 font-black text-accent tracking-tighter text-xs sm:text-sm">
-                                        <input type="text" inputmode="numeric" class="w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-black text-accent py-1 min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.salePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'salePrice', this.value)">
+                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 font-black text-accent tracking-tighter text-xs sm:text-sm">
+                                        <input type="text" inputmode="numeric" class="w-16 sm:w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-black text-accent py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.salePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'salePrice', this.value)">
                                     </td>
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5 font-bold text-slate-500 tracking-tighter text-xs sm:text-sm">
-                                        <div class="flex items-center gap-1">
+                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 font-bold text-slate-500 tracking-tighter text-xs sm:text-sm">
+                                        <div class="flex items-center gap-0.5">
                                             ${(state.showPurchasePrices || state.visiblePurchasePrices.map(String).includes(String(p.id))) 
-                                                ? `<input type="text" inputmode="numeric" class="w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-500 py-1 min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.purchasePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'purchasePrice', this.value)">`
+                                                ? `<input type="text" inputmode="numeric" class="w-14 sm:w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-500 py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.purchasePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'purchasePrice', this.value)">`
                                                 : '<span class="font-bold tracking-[0.1em] text-slate-300">••••</span>'
                                             }
-                                            <button onclick="toggleRowPurchasePrice('${p.id}')" class="text-slate-400 hover:text-accent transition-all p-1 min-w-[32px] min-h-[32px] flex items-center justify-center">
-                                                <i data-lucide="${state.visiblePurchasePrices.map(String).includes(String(p.id)) ? 'eye-off' : 'eye'}" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                                            <button onclick="toggleRowPurchasePrice('${p.id}')" class="text-slate-400 hover:text-accent transition-all p-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center">
+                                                <i data-lucide="${state.visiblePurchasePrices.map(String).includes(String(p.id)) ? 'eye-off' : 'eye'}" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                                             </button>
                                         </div>
                                     </td>
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5 text-xs sm:text-sm">
-                                        <input type="text" inputmode="numeric" class="w-14 bg-transparent border-b border-transparent focus:border-accent outline-none py-1 min-h-[36px] touch-pan-y ${p.stock <= 3 ? 'text-red-500 font-black' : 'font-bold text-slate-700'}" style="touch-action: pan-y;" value="${formatNumberString(p.stock)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'stock', this.value)">
+                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 text-xs sm:text-sm">
+                                        <input type="text" inputmode="numeric" class="w-10 sm:w-14 bg-transparent border-b border-transparent focus:border-accent outline-none py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y ${p.stock <= 3 ? 'text-red-500 font-black' : 'font-bold text-slate-700'}" style="touch-action: pan-y;" value="${formatNumberString(p.stock)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'stock', this.value)">
                                     </td>
-                                    <td class="py-1.5 px-2.5 sm:py-2 sm:px-3.5 text-right">
-                                        <button onclick="confirmDeleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" class="text-slate-300 hover:text-red-500 active:scale-95 transition-colors p-1.5 min-w-[36px] min-h-[36px] inline-flex items-center justify-center">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 text-right">
+                                        <button onclick="confirmDeleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" class="text-slate-300 hover:text-red-500 active:scale-95 transition-colors p-1 min-w-[28px] min-h-[28px] inline-flex items-center justify-center">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                                         </button>
                                     </td>
                                 </tr>

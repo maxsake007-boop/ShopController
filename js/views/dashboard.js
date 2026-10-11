@@ -10,11 +10,11 @@ window.renderDashboard = () => {
 
     return `
         <div class="space-y-3 sm:space-y-4 pb-16 dashboard-page-content">
-            <div class="flex justify-between items-center gap-2">
-                <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2 flex-shrink-0">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 sm:w-5 sm:h-5 text-accent"></i> ${t('dashboard')}
                 </h2>
-                <div class="flex bg-white p-0.5 border border-slate-200 rounded-xl text-[10px] sm:text-xs font-black uppercase overflow-x-auto">
+                <div class="flex bg-white p-0.5 border border-slate-200 rounded-xl text-[10px] sm:text-xs font-black uppercase w-full sm:w-auto overflow-x-auto">
                     ${['today', 'week', 'month', 'quarter', 'year'].map(f => {
                         const labels = {
                             'today': t('for_today'),
@@ -24,7 +24,7 @@ window.renderDashboard = () => {
                             'year': t('for_year')
                         };
                         return `
-                            <button onclick="state.dashboard.filter='${f}'; render()" class="px-2.5 py-1 rounded-lg transition-all whitespace-nowrap min-h-[32px] flex items-center justify-center ${state.dashboard.filter === f ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:bg-slate-50'}">${labels[f]}</button>
+                            <button onclick="state.dashboard.filter='${f}'; render()" class="flex-1 sm:flex-initial text-center px-1.5 sm:px-2.5 py-1 rounded-lg transition-all whitespace-nowrap min-h-[30px] flex items-center justify-center ${state.dashboard.filter === f ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:bg-slate-50'}">${labels[f]}</button>
                         `;
                     }).join('')}
                 </div>
