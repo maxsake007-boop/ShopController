@@ -28,6 +28,8 @@ window.applyTabletZoom = () => {
     }
     document.querySelectorAll('.tablet-zoom-value-sync').forEach(el => el.textContent = zoomText);
 
+    const isMobilePhone = window.innerWidth < 768;
+
     if (isTabletLandscape) {
         document.documentElement.style.setProperty('--tablet-zoom', String(tabletZoomLevel));
         document.documentElement.style.fontSize = '';
@@ -37,6 +39,17 @@ window.applyTabletZoom = () => {
         document.body.style.height = `calc(100dvh / ${tabletZoomLevel})`;
         document.body.style.minHeight = `calc(100dvh / ${tabletZoomLevel})`;
         document.body.style.maxHeight = `calc(100dvh / ${tabletZoomLevel})`;
+    } else if (isMobilePhone) {
+        // Mobile 85% scale (15% reduction requested by user)
+        const mobileZoom = 0.85;
+        document.documentElement.style.removeProperty('--tablet-zoom');
+        document.documentElement.style.fontSize = '';
+        document.body.style.zoom = String(mobileZoom);
+        document.body.style.width = `calc(100vw / ${mobileZoom})`;
+        document.body.style.maxWidth = `calc(100vw / ${mobileZoom})`;
+        document.body.style.height = `calc(100dvh / ${mobileZoom})`;
+        document.body.style.minHeight = `calc(100dvh / ${mobileZoom})`;
+        document.body.style.maxHeight = `calc(100dvh / ${mobileZoom})`;
     } else {
         document.documentElement.style.removeProperty('--tablet-zoom');
         document.documentElement.style.fontSize = '';

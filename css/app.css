@@ -152,6 +152,23 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* === SMARTPHONE / MOBILE ADAPTATION (Samsung S22 Ultra & All Smartphones in Portrait) === */
 @media screen and (max-width: 767px) {
+    html {
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    body {
+        zoom: 0.85 !important;
+        width: calc(100vw / 0.85) !important;
+        max-width: calc(100vw / 0.85) !important;
+        height: calc(100dvh / 0.85) !important;
+        min-height: calc(100dvh / 0.85) !important;
+        max-height: calc(100dvh / 0.85) !important;
+        overflow: hidden !important;
+        -webkit-text-size-adjust: 100%;
+    }
+
     /* Prevent automatic browser zoom when focusing input fields */
     input, select, textarea {
         font-size: 16px !important;

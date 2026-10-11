@@ -81,7 +81,7 @@ window.render = () => {
 window.initApp = async () => {
     // 1. Регистрация Service Worker (PWA)
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        navigator.serviceWorker.register('./sw.js?v=2.6').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=2.7').then((reg) => {
             console.log('[PWA] Service Worker зарегистрирован:', reg.scope);
             reg.update().catch(() => {});
         }).catch((err) => {
