@@ -9,7 +9,7 @@ window.renderDashboard = () => {
     const filteredExpenses = state.expenses.filter(e => e.timestamp >= startTime).sort((a, b) => b.timestamp - a.timestamp);
 
     return `
-        <div class="space-y-3 sm:space-y-4 pb-16">
+        <div class="space-y-3 sm:space-y-4 pb-16 dashboard-page-content">
             <div class="flex justify-between items-center gap-2">
                 <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 sm:w-5 sm:h-5 text-accent"></i> ${t('dashboard')}

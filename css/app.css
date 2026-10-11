@@ -225,4 +225,13 @@ input[type="number"]::-webkit-outer-spin-button {
         touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch;
     }
+
+    /* Specific Extra 15% reduction for Sklad, Reports, and Dashboard pages on mobile */
+    .sklad-page-content,
+    .report-page-content,
+    .dashboard-page-content {
+        zoom: 0.85 !important;
+        width: calc(100% / 0.85) !important;
+        box-sizing: border-box !important;
+    }
 }

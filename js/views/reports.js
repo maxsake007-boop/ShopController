@@ -69,7 +69,7 @@ window.renderReport = () => {
     }).filter(d => d.balance > 0).sort((a, b) => b.balance - a.balance);
 
     return `
-        <div class="space-y-3 sm:space-y-4 pb-20 md:pb-8">
+        <div class="space-y-3 sm:space-y-4 pb-20 md:pb-8 report-page-content">
             <div class="flex justify-between items-center gap-2">
                 <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
                     <i data-lucide="file-text" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('reports')}

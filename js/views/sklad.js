@@ -5,7 +5,7 @@
 window._currentAddPhotoBlob = null;
 
 window.renderSklad = () => `
-    <div class="space-y-2.5 sm:space-y-4 pb-36 sm:pb-32 md:pb-20">
+    <div class="space-y-2.5 sm:space-y-4 pb-36 sm:pb-32 md:pb-20 sklad-page-content">
         <div class="flex justify-between items-center gap-2">
             <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
                 <i data-lucide="package" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('sklad')}
