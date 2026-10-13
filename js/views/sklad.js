@@ -16,13 +16,13 @@ window.renderSklad = () => `
         </div>
         <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm overflow-hidden text-xs sm:text-sm">
             <div class="overflow-x-auto custom-scrollbar sklad-table-container">
-                <table class="w-full text-left font-sans min-w-0 sm:min-w-[540px]">
-                    <thead class="sticky top-0 z-10 bg-slate-50 border-b text-[9px] sm:text-xs font-black uppercase text-slate-400 tracking-wider sm:tracking-widest shadow-sm">
+                <table class="w-full text-left font-sans min-w-[460px] sm:min-w-[540px]">
+                    <thead class="sticky top-0 z-10 bg-slate-50 border-b text-[10px] sm:text-xs font-black uppercase text-slate-400 tracking-wider sm:tracking-widest shadow-sm">
                         <tr>
-                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-9 sm:w-12">${t('photo')}</th>
-                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5">${t('name')}</th>
-                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-16 sm:w-24">${t('sale_short')}</th>
-                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-16 sm:w-24">
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-10 sm:w-12">${t('photo')}</th>
+                            <th class="py-2 px-2 sm:py-2.5 sm:px-3.5 min-w-[130px] sm:min-w-0">${t('name')}</th>
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-20 sm:w-24">${t('sale_short')}</th>
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-20 sm:w-24">
                                 <div class="flex items-center gap-1">
                                     <span>${t('purchase_short')}</span> 
                                     <button onclick="state.showPurchasePrices = !state.showPurchasePrices; render()" class="hover:text-accent transition-colors p-0.5">
@@ -30,7 +30,7 @@ window.renderSklad = () => `
                                     </button>
                                 </div>
                             </th>
-                            <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 w-10 sm:w-16">${t('stock')}</th>
+                            <th class="py-2 px-1.5 sm:py-2.5 sm:px-3.5 w-12 sm:w-16">${t('stock')}</th>
                             <th class="py-2 px-1 sm:py-2.5 sm:px-3.5 text-right w-8 sm:w-10"></th>
                         </tr>
                     </thead>
@@ -44,25 +44,25 @@ window.renderSklad = () => `
                                             ${photoSrc ? `<img src="${photoSrc}" class="w-full h-full object-cover" alt="${p.name}" loading="lazy">` : '<i data-lucide="package" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>'}
                                         </div>
                                     </td>
-                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5 min-w-0">
-                                        <input class="w-full bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-800 text-xs sm:text-sm py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${p.name}" onchange="editProduct('${p.id}', 'name', this.value)">
+                                    <td class="py-1 px-2 sm:py-2 sm:px-3.5 min-w-0">
+                                        <input class="w-full bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-800 text-xs sm:text-sm py-1 min-h-[30px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${p.name}" onchange="editProduct('${p.id}', 'name', this.value)">
                                     </td>
-                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 font-black text-accent tracking-tighter text-xs sm:text-sm">
-                                        <input type="text" inputmode="numeric" class="w-16 sm:w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-black text-accent py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.salePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'salePrice', this.value)">
+                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5 font-black text-accent tracking-tighter text-xs sm:text-sm">
+                                        <input type="text" inputmode="numeric" class="w-20 min-w-[70px] sm:w-24 bg-transparent border-b border-transparent focus:border-accent outline-none font-black text-accent py-1 min-h-[30px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.salePrice ?? p.price)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'salePrice', this.value)">
                                     </td>
-                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 font-bold text-slate-500 tracking-tighter text-xs sm:text-sm">
+                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5 font-bold text-slate-500 tracking-tighter text-xs sm:text-sm">
                                         <div class="flex items-center gap-0.5">
                                             ${(state.showPurchasePrices || state.visiblePurchasePrices.map(String).includes(String(p.id))) 
-                                                ? `<input type="text" inputmode="numeric" class="w-14 sm:w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-500 py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.purchasePrice)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'purchasePrice', this.value)">`
+                                                ? `<input type="text" inputmode="numeric" class="w-16 min-w-[60px] sm:w-20 bg-transparent border-b border-transparent focus:border-accent outline-none font-bold text-slate-500 py-1 min-h-[30px] sm:min-h-[36px] touch-pan-y" style="touch-action: pan-y;" value="${formatNumberString(p.purchasePrice ?? p.cost)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'purchasePrice', this.value)">`
                                                 : '<span class="font-bold tracking-[0.1em] text-slate-300">••••</span>'
                                             }
-                                            <button onclick="toggleRowPurchasePrice('${p.id}')" class="text-slate-400 hover:text-accent transition-all p-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center">
+                                            <button onclick="toggleRowPurchasePrice('${p.id}')" class="text-slate-400 hover:text-accent transition-all p-0.5 min-w-[22px] min-h-[22px] flex items-center justify-center">
                                                 <i data-lucide="${state.visiblePurchasePrices.map(String).includes(String(p.id)) ? 'eye-off' : 'eye'}" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                                             </button>
                                         </div>
                                     </td>
-                                    <td class="py-1 px-1 sm:py-2 sm:px-3.5 text-xs sm:text-sm">
-                                        <input type="text" inputmode="numeric" class="w-10 sm:w-14 bg-transparent border-b border-transparent focus:border-accent outline-none py-1 min-h-[32px] sm:min-h-[36px] touch-pan-y ${p.stock <= 3 ? 'text-red-500 font-black' : 'font-bold text-slate-700'}" style="touch-action: pan-y;" value="${formatNumberString(p.stock)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'stock', this.value)">
+                                    <td class="py-1 px-1.5 sm:py-2 sm:px-3.5 text-xs sm:text-sm">
+                                        <input type="text" inputmode="numeric" class="w-12 min-w-[40px] sm:w-14 bg-transparent border-b border-transparent focus:border-accent outline-none py-1 min-h-[30px] sm:min-h-[36px] touch-pan-y ${p.stock <= 3 ? 'text-red-500 font-black' : 'font-bold text-slate-700'}" style="touch-action: pan-y;" value="${formatNumberString(p.stock)}" oninput="handleNumericInput(this)" onchange="editProduct('${p.id}', 'stock', this.value)">
                                     </td>
                                     <td class="py-1 px-1 sm:py-2 sm:px-3.5 text-right">
                                         <button onclick="confirmDeleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" class="text-slate-300 hover:text-red-500 active:scale-95 transition-colors p-1 min-w-[28px] min-h-[28px] inline-flex items-center justify-center">

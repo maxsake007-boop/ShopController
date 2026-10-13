@@ -226,10 +226,10 @@ input[type="number"]::-webkit-outer-spin-button {
         flex: 1 1 0% !important;
     }
 
-    /* Dashboard charts on mobile: comfortable height */
+    /* Dashboard charts on mobile: comfortable height and breathing room */
     .dashboard-chart-card {
-        min-height: 250px !important;
-        height: 270px !important;
+        min-height: 290px !important;
+        height: 310px !important;
     }
 
     /* Touch targets and scrolling */
@@ -238,13 +238,41 @@ input[type="number"]::-webkit-outer-spin-button {
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Specific Compact & Full-Width layout for Sklad, Reports, and Dashboard on vertical mobile */
-    .sklad-page-content,
-    .report-page-content,
+    /* Dedicated mobile scale reduction for Sklad and Dashboard only */
+    .sklad-page-content {
+        zoom: 0.82 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
     .dashboard-page-content {
+        zoom: 0.84 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .report-page-content {
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
         overflow-x: hidden !important;
+    }
+
+    /* Sklad Table typography and spacing on vertical mobile - prevents text overlap */
+    .sklad-table-container input {
+        font-size: 12px !important;
+        min-height: 28px !important;
+        height: 28px !important;
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    .sklad-table-container td,
+    .sklad-table-container th {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
     }
 }

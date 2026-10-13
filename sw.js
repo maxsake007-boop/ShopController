@@ -2,37 +2,37 @@
 //                    SERVICE WORKER - AGORA POS (PWA)
 // =============================================================================
 
-const CACHE_NAME = 'agora-pos-v3.1';
+const CACHE_NAME = 'agora-pos-v3.2';
 
 // Основные файлы приложения для автономной работы (App Shell)
 const STATIC_ASSETS = [
     '/',
-    '/?v=3.1',
+    '/?v=3.2',
     '/index.html',
     '/manifest.json',
-    '/manifest.json?v=3.1',
-    '/css/app.css?v=3.1',
+    '/manifest.json?v=3.2',
+    '/css/app.css?v=3.2',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/icon-maskable.png',
     '/icons/favicon.png',
     '/icons/logo.png',
-    '/js/config.js?v=3.1',
-    '/js/translations.js?v=3.1',
-    '/js/db.js?v=3.1',
-    '/js/state.js?v=3.1',
-    '/js/utils.js?v=3.1',
-    '/js/tablet-zoom.js?v=3.1',
-    '/js/photo.js?v=3.1',
-    '/js/activation.js?v=3.1',
-    '/js/backup.js?v=3.1',
-    '/js/views/kassa.js?v=3.1',
-    '/js/views/sklad.js?v=3.1',
-    '/js/views/dolgi.js?v=3.1',
-    '/js/views/reports.js?v=3.1',
-    '/js/views/dashboard.js?v=3.1',
-    '/js/views/settings.js?v=3.1',
-    '/js/app.js?v=3.1'
+    '/js/config.js?v=3.2',
+    '/js/translations.js?v=3.2',
+    '/js/db.js?v=3.2',
+    '/js/state.js?v=3.2',
+    '/js/utils.js?v=3.2',
+    '/js/tablet-zoom.js?v=3.2',
+    '/js/photo.js?v=3.2',
+    '/js/activation.js?v=3.2',
+    '/js/backup.js?v=3.2',
+    '/js/views/kassa.js?v=3.2',
+    '/js/views/sklad.js?v=3.2',
+    '/js/views/dolgi.js?v=3.2',
+    '/js/views/reports.js?v=3.2',
+    '/js/views/dashboard.js?v=3.2',
+    '/js/views/settings.js?v=3.2',
+    '/js/app.js?v=3.2'
 ];
 
 // Внешние CDN библиотеки для кеширования

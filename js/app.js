@@ -88,7 +88,7 @@ window.initApp = async () => {
                 window.location.reload();
             }
         });
-        navigator.serviceWorker.register('./sw.js?v=3.1').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.2').then((reg) => {
             console.log('[PWA] Service Worker зарегистрирован:', reg.scope);
             reg.update().catch(() => {});
         }).catch((err) => {

@@ -288,6 +288,15 @@ window.initCharts = () => {
     }
 
     const isQuarter = state.dashboard.filter === 'quarter';
+    const filter = state.dashboard.filter;
+
+    const formatShortY = (val) => {
+        if (!val) return '0';
+        if (val >= 1000000) return (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'M';
+        if (val >= 1000) return (val / 1000).toFixed(0) + 'k';
+        return val;
+    };
+
     barChartInstance = new Chart(ctxBar, {
         type: isQuarter ? 'bar' : 'line',
         data: {
@@ -296,22 +305,55 @@ window.initCharts = () => {
                 label: state.lang === 'ru' ? 'Выручка' : 'Kirim', 
                 data: chartData, 
                 borderColor: '#FF6B00', 
-                tension: 0.4, 
+                tension: 0.35, 
                 fill: !isQuarter, 
-                backgroundColor: isQuarter ? 'rgba(255, 107, 0, 0.85)' : 'rgba(255, 107, 0, 0.1)', 
-                borderWidth: isQuarter ? 0 : 3, 
-                pointRadius: isQuarter ? 0 : 4, 
+                backgroundColor: isQuarter ? 'rgba(255, 107, 0, 0.85)' : 'rgba(255, 107, 0, 0.12)', 
+                borderWidth: isQuarter ? 0 : 2.5, 
+                pointRadius: isQuarter ? 0 : (filter === 'month' ? 1.5 : 2.5), 
+                pointHoverRadius: 6,
+                pointHitRadius: 16,
                 pointBackgroundColor: '#FF6B00',
-                borderRadius: isQuarter ? 16 : 0,
+                borderRadius: isQuarter ? 14 : 0,
                 maxBarThickness: isQuarter ? 48 : undefined
             }]
         },
         options: { 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0F172A',
+                    padding: 8,
+                    cornerRadius: 10,
+                    titleFont: { size: 10, weight: 'bold' },
+                    bodyFont: { size: 11, weight: 'bold' },
+                    callbacks: {
+                        label: (ctx) => `${formatPrice(ctx.raw)} ${state.settings.currency || 'сум'}`
+                    }
+                }
+            },
             scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
-                x: { grid: { display: false } }
+                y: { 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: {
+                        font: { size: 9, weight: 'bold' },
+                        color: '#94A3B8',
+                        maxTicksLimit: 5,
+                        callback: formatShortY
+                    }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: {
+                        font: { size: 9, weight: 'bold' },
+                        color: '#94A3B8',
+                        maxRotation: 0,
+                        minRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: filter === 'today' ? 9 : (filter === 'month' ? 7 : (filter === 'year' ? 6 : 7))
+                    }
+                }
             }
         }
     });
