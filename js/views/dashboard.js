@@ -178,10 +178,13 @@ window.initCharts = () => {
     let chartData = [];
     
     if (state.dashboard.filter === 'today') {
-        for (let i = 0; i < 24; i++) {
+        const startHour = 6;
+        const endHour = 22;
+        for (let i = startHour; i <= endHour; i++) {
             chartLabels.push(`${i}:00`);
         }
-        chartData = chartLabels.map((_, h) => {
+        chartData = chartLabels.map((_, idx) => {
+            const h = startHour + idx;
             const start = new Date();
             start.setHours(h, 0, 0, 0);
             const end = new Date(start);

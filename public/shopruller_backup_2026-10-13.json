@@ -1,0 +1,3485 @@
+{
+  "format": "shopruller",
+  "version": 1,
+  "createdAt": "2026-10-13T10:39:59.342Z",
+  "shopName": "Agora",
+  "data": {
+    "products": [
+      {
+        "id": 1790624022158,
+        "name": "Черная футболка M",
+        "price": 200000,
+        "ost": 9,
+        "salePrice": 200000,
+        "purchasePrice": 100000,
+        "stock": 9,
+        "photoUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtNmEdXS4OmXuMFswzm8QatvMCs9bd9GWtXg&s",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791284251019,
+        "name": "Черная футболка XL",
+        "price": 200000,
+        "ost": 9,
+        "salePrice": 200000,
+        "purchasePrice": 70000,
+        "stock": 9,
+        "photoUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtNmEdXS4OmXuMFswzm8QatvMCs9bd9GWtXg&s",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791284672467,
+        "name": "Красовки Найк",
+        "price": 450000,
+        "ost": 9,
+        "salePrice": 450000,
+        "purchasePrice": 200000,
+        "stock": 9,
+        "photoUrl": "https://i.pinimg.com/1200x/87/b2/aa/87b2aa1f57fd9b2ac6f9e0d01072b385.jpg",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791284900011,
+        "name": "Трико Найк ",
+        "price": 150000,
+        "ost": 9,
+        "salePrice": 150000,
+        "purchasePrice": 70000,
+        "stock": 9,
+        "photoUrl": "https://i.pinimg.com/736x/cc/9e/c9/cc9ec91acfcefa03b616d09ec54999a0.jpg",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791285028667,
+        "name": "Спортивка Адидас",
+        "price": 150000,
+        "ost": 9,
+        "salePrice": 150000,
+        "purchasePrice": 70000,
+        "stock": 9,
+        "photoUrl": "https://i.pinimg.com/736x/5b/ae/7c/5bae7c8e6fb140c633b0af7f9bed9c5c.jpg",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791285111961,
+        "name": "Носки найк",
+        "price": 35000,
+        "ost": 9,
+        "salePrice": 35000,
+        "purchasePrice": 15000,
+        "stock": 9,
+        "photoUrl": "https://i.pinimg.com/736x/ce/f6/7c/cef67cfb18290d67a5534981b602b537.jpg",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791285176177,
+        "name": "Куртка",
+        "price": 550000,
+        "ost": 4,
+        "salePrice": 550000,
+        "purchasePrice": 300000,
+        "stock": 4,
+        "photoUrl": "https://i.pinimg.com/1200x/38/ac/62/38ac621bfbd74b8d2cbab5812b50059f.jpg",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791285204185,
+        "name": "Товар",
+        "price": 1,
+        "ost": 10,
+        "salePrice": 1,
+        "purchasePrice": 1,
+        "stock": 10,
+        "photoUrl": "",
+        "photoBlob": null,
+        "photoBase64": null
+      },
+      {
+        "id": 1791285217061,
+        "name": "Товар 2",
+        "price": 2,
+        "ost": 10,
+        "salePrice": 2,
+        "purchasePrice": 2,
+        "stock": 10,
+        "photoUrl": "",
+        "photoBlob": null,
+        "photoBase64": null
+      }
+    ],
+    "sales": [
+      {
+        "id": "1791885140000-0",
+        "date": 1791885140000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1791885140000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791880820000-0",
+        "date": 1791880820000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791880820000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791875540000-0",
+        "date": 1791875540000,
+        "total": 70000,
+        "payment_method": "cash",
+        "timestamp": 1791875540000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791873320000-0",
+        "date": 1791873320000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1791873320000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791868700000-0",
+        "date": 1791868700000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1791868700000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791816087000-0",
+        "date": 1791816087000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1791816087000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791801575000-0",
+        "date": 1791801575000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791801575000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791801566000-0",
+        "date": 1791801566000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791801566000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791790394000-0",
+        "date": 1791790394000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791790394000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791783075000-0",
+        "date": 1791783075000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1791783075000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791725361000-0",
+        "date": 1791725361000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1791725361000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791720830000-0",
+        "date": 1791720830000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1791720830000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791710181000-0",
+        "date": 1791710181000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791710181000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791707548000-0",
+        "date": 1791707548000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791707548000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791641678000-0",
+        "date": 1791641678000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1791641678000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791633279000-0",
+        "date": 1791633279000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1791633279000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791631700000-0",
+        "date": 1791631700000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1791631700000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791631330000-0",
+        "date": 1791631330000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1791631330000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791621610000-0",
+        "date": 1791621610000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791621610000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791617204000-0",
+        "date": 1791617204000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1791617204000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791613091000-0",
+        "date": 1791613091000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791613091000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791540553000-0",
+        "date": 1791540553000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791540553000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791537684000-0",
+        "date": 1791537684000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791537684000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791462871000-0",
+        "date": 1791462871000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791462871000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791460180000-0",
+        "date": 1791460180000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791460180000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791447742000-0",
+        "date": 1791447742000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791447742000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791375808000-0",
+        "date": 1791375808000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1791375808000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791358426000-0",
+        "date": 1791358426000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1791358426000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791281427000-0",
+        "date": 1791281427000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791281427000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791272088000-0",
+        "date": 1791272088000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791272088000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791201400000-0",
+        "date": 1791201400000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791201400000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791186567000-0",
+        "date": 1791186567000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1791186567000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791121838000-0",
+        "date": 1791121838000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1791121838000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791121838000-1",
+        "date": 1791121838000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1791121838000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791112051000-0",
+        "date": 1791112051000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1791112051000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791110963000-0",
+        "date": 1791110963000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791110963000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791110963000-1",
+        "date": 1791110963000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1791110963000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791104007000-0",
+        "date": 1791104007000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1791104007000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791099210000-0",
+        "date": 1791099210000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1791099210000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791099079000-0",
+        "date": 1791099079000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1791099079000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791031036000-0",
+        "date": 1791031036000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1791031036000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791023450000-0",
+        "date": 1791023450000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1791023450000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791023450000-1",
+        "date": 1791023450000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1791023450000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791014801000-0",
+        "date": 1791014801000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1791014801000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1791011542000-0",
+        "date": 1791011542000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1791011542000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790946637000-0",
+        "date": 1790946637000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790946637000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790941043000-0",
+        "date": 1790941043000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790941043000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790941043000-1",
+        "date": 1790941043000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790941043000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790936177000-0",
+        "date": 1790936177000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1790936177000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790932634000-0",
+        "date": 1790932634000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790932634000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790932634000-1",
+        "date": 1790932634000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790932634000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790920007000-0",
+        "date": 1790920007000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790920007000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790858981000-0",
+        "date": 1790858981000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790858981000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790853622000-0",
+        "date": 1790853622000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1790853622000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790851214000-0",
+        "date": 1790851214000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1790851214000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790851214000-1",
+        "date": 1790851214000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1790851214000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790848363000-0",
+        "date": 1790848363000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1790848363000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790839167000-0",
+        "date": 1790839167000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790839167000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790770460000-0",
+        "date": 1790770460000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1790770460000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790760869000-0",
+        "date": 1790760869000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1790760869000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790676264000-0",
+        "date": 1790676264000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1790676264000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790676264000-1",
+        "date": 1790676264000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1790676264000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790667633000-0",
+        "date": 1790667633000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790667633000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790623882707-0",
+        "date": 1790623882707,
+        "total": 250000,
+        "payment_method": "debt",
+        "timestamp": 1790623882707,
+        "paymentType": "debt",
+        "clientName": "Max",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 250000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790591067000-0",
+        "date": 1790591067000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790591067000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790587846000-0",
+        "date": 1790587846000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790587846000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790518061000-0",
+        "date": 1790518061000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1790518061000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790511280000-0",
+        "date": 1790511280000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1790511280000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790511280000-1",
+        "date": 1790511280000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1790511280000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790505744000-0",
+        "date": 1790505744000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1790505744000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790505744000-1",
+        "date": 1790505744000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1790505744000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790499948000-0",
+        "date": 1790499948000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1790499948000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790486075000-0",
+        "date": 1790486075000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790486075000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790433393000-0",
+        "date": 1790433393000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790433393000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790426549000-0",
+        "date": 1790426549000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790426549000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790422696000-0",
+        "date": 1790422696000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1790422696000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790420865000-0",
+        "date": 1790420865000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1790420865000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790412632000-0",
+        "date": 1790412632000,
+        "total": 105000,
+        "payment_method": "cash",
+        "timestamp": 1790412632000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790411019000-0",
+        "date": 1790411019000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1790411019000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790400311000-0",
+        "date": 1790400311000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790400311000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790338365000-0",
+        "date": 1790338365000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1790338365000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790332091000-0",
+        "date": 1790332091000,
+        "total": 70000,
+        "payment_method": "cash",
+        "timestamp": 1790332091000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790321060000-0",
+        "date": 1790321060000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1790321060000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790250825000-0",
+        "date": 1790250825000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1790250825000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790241335000-0",
+        "date": 1790241335000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790241335000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790166163000-0",
+        "date": 1790166163000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1790166163000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790153319000-0",
+        "date": 1790153319000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1790153319000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790079763000-0",
+        "date": 1790079763000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1790079763000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790076933000-0",
+        "date": 1790076933000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1790076933000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1790059830000-0",
+        "date": 1790059830000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1790059830000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789996510000-0",
+        "date": 1789996510000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789996510000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789996510000-1",
+        "date": 1789996510000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1789996510000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789986926000-0",
+        "date": 1789986926000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1789986926000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789979867000-0",
+        "date": 1789979867000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789979867000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789978544000-0",
+        "date": 1789978544000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1789978544000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789907613000-0",
+        "date": 1789907613000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1789907613000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789907613000-1",
+        "date": 1789907613000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1789907613000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789903059000-0",
+        "date": 1789903059000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1789903059000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789898788000-0",
+        "date": 1789898788000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1789898788000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789898715000-0",
+        "date": 1789898715000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1789898715000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789889961000-0",
+        "date": 1789889961000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789889961000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789888660000-0",
+        "date": 1789888660000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1789888660000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789886059000-0",
+        "date": 1789886059000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789886059000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789825354000-0",
+        "date": 1789825354000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1789825354000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789814832000-0",
+        "date": 1789814832000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1789814832000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789812708000-0",
+        "date": 1789812708000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1789812708000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789802313000-0",
+        "date": 1789802313000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1789802313000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789797888000-0",
+        "date": 1789797888000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1789797888000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789737072000-0",
+        "date": 1789737072000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789737072000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789722924000-0",
+        "date": 1789722924000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789722924000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789722924000-1",
+        "date": 1789722924000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1789722924000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789715532000-0",
+        "date": 1789715532000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789715532000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789648466000-0",
+        "date": 1789648466000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1789648466000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789645887000-0",
+        "date": 1789645887000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1789645887000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789631414000-0",
+        "date": 1789631414000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789631414000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789561469000-0",
+        "date": 1789561469000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1789561469000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789550778000-0",
+        "date": 1789550778000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789550778000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789547599000-0",
+        "date": 1789547599000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789547599000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789469305000-0",
+        "date": 1789469305000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789469305000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789461132000-0",
+        "date": 1789461132000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1789461132000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789393788000-0",
+        "date": 1789393788000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1789393788000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789380927000-0",
+        "date": 1789380927000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1789380927000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789370562000-0",
+        "date": 1789370562000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1789370562000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789304745000-0",
+        "date": 1789304745000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1789304745000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789293920000-0",
+        "date": 1789293920000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1789293920000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789293851000-0",
+        "date": 1789293851000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789293851000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789293851000-1",
+        "date": 1789293851000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789293851000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789288898000-0",
+        "date": 1789288898000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789288898000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789224070000-0",
+        "date": 1789224070000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789224070000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789221196000-0",
+        "date": 1789221196000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1789221196000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789214014000-0",
+        "date": 1789214014000,
+        "total": 35000,
+        "payment_method": "cash",
+        "timestamp": 1789214014000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789211590000-0",
+        "date": 1789211590000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1789211590000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789200940000-0",
+        "date": 1789200940000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789200940000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789199424000-0",
+        "date": 1789199424000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789199424000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789190067000-0",
+        "date": 1789190067000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1789190067000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789129490000-0",
+        "date": 1789129490000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789129490000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789119100000-0",
+        "date": 1789119100000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789119100000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789112662000-0",
+        "date": 1789112662000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1789112662000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789035920000-0",
+        "date": 1789035920000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1789035920000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1789029690000-0",
+        "date": 1789029690000,
+        "total": 105000,
+        "payment_method": "cash",
+        "timestamp": 1789029690000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788952945000-0",
+        "date": 1788952945000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788952945000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788952945000-1",
+        "date": 1788952945000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1788952945000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788951876000-0",
+        "date": 1788951876000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788951876000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788936675000-0",
+        "date": 1788936675000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788936675000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788936675000-1",
+        "date": 1788936675000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788936675000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788862305000-0",
+        "date": 1788862305000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1788862305000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788859060000-0",
+        "date": 1788859060000,
+        "total": 450000,
+        "payment_method": "card",
+        "timestamp": 1788859060000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788783195000-0",
+        "date": 1788783195000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788783195000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788772002000-0",
+        "date": 1788772002000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788772002000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788772002000-1",
+        "date": 1788772002000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1788772002000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788769279000-0",
+        "date": 1788769279000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788769279000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788704498000-0",
+        "date": 1788704498000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788704498000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788704498000-1",
+        "date": 1788704498000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788704498000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788694183000-0",
+        "date": 1788694183000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788694183000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788692914000-0",
+        "date": 1788692914000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1788692914000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788689845000-0",
+        "date": 1788689845000,
+        "total": 550000,
+        "payment_method": "card",
+        "timestamp": 1788689845000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788682523000-0",
+        "date": 1788682523000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1788682523000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788682523000-1",
+        "date": 1788682523000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788682523000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788682410000-0",
+        "date": 1788682410000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1788682410000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788672588000-0",
+        "date": 1788672588000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1788672588000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788672588000-1",
+        "date": 1788672588000,
+        "total": 550000,
+        "payment_method": "cash",
+        "timestamp": 1788672588000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285176177",
+            "name": "Куртка",
+            "qty": 1,
+            "price": 550000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788615795000-0",
+        "date": 1788615795000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788615795000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788606748000-0",
+        "date": 1788606748000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788606748000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788606260000-0",
+        "date": 1788606260000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788606260000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788603040000-0",
+        "date": 1788603040000,
+        "total": 450000,
+        "payment_method": "cash",
+        "timestamp": 1788603040000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284672467",
+            "name": "Красовки Найк",
+            "qty": 1,
+            "price": 450000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788599175000-0",
+        "date": 1788599175000,
+        "total": 70000,
+        "payment_method": "cash",
+        "timestamp": 1788599175000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788592183000-0",
+        "date": 1788592183000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1788592183000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788589036000-0",
+        "date": 1788589036000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788589036000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788531745000-0",
+        "date": 1788531745000,
+        "total": 200000,
+        "payment_method": "card",
+        "timestamp": 1788531745000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788521428000-0",
+        "date": 1788521428000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788521428000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788511715000-0",
+        "date": 1788511715000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788511715000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788504502000-0",
+        "date": 1788504502000,
+        "total": 35000,
+        "payment_method": "card",
+        "timestamp": 1788504502000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 1,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788504502000-1",
+        "date": 1788504502000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788504502000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788439403000-0",
+        "date": 1788439403000,
+        "total": 105000,
+        "payment_method": "card",
+        "timestamp": 1788439403000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 3,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788431199000-0",
+        "date": 1788431199000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788431199000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788416916000-0",
+        "date": 1788416916000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788416916000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284251019",
+            "name": "Черная футболка XL",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788353548000-0",
+        "date": 1788353548000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788353548000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788333769000-0",
+        "date": 1788333769000,
+        "total": 200000,
+        "payment_method": "cash",
+        "timestamp": 1788333769000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1790624022158",
+            "name": "Черная футболка M",
+            "qty": 1,
+            "price": 200000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788274359000-0",
+        "date": 1788274359000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788274359000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788265779000-0",
+        "date": 1788265779000,
+        "total": 150000,
+        "payment_method": "cash",
+        "timestamp": 1788265779000,
+        "paymentType": "cash",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285028667",
+            "name": "Спортивка Адидас",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788251490000-0",
+        "date": 1788251490000,
+        "total": 70000,
+        "payment_method": "card",
+        "timestamp": 1788251490000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791285111961",
+            "name": "Носки найк",
+            "qty": 2,
+            "price": 35000
+          }
+        ],
+        "displayTimestamp": ""
+      },
+      {
+        "id": "1788249874000-0",
+        "date": 1788249874000,
+        "total": 150000,
+        "payment_method": "card",
+        "timestamp": 1788249874000,
+        "paymentType": "card",
+        "clientName": "",
+        "items": [
+          {
+            "productId": "1791284900011",
+            "name": "Трико Найк ",
+            "qty": 1,
+            "price": 150000
+          }
+        ],
+        "displayTimestamp": ""
+      }
+    ],
+    "debtors": [
+      {
+        "id": 6,
+        "name": "Max",
+        "debt": 200000,
+        "clientName": "Max",
+        "transactions": [
+          {
+            "type": "debt",
+            "amount": 250000,
+            "timestamp": 1790623882707,
+            "saleId": "1790623882707-0",
+            "items": [
+              {
+                "productId": "1790624022158",
+                "name": "Черная футболка M",
+                "qty": 1,
+                "price": 250000
+              }
+            ]
+          },
+          {
+            "type": "payment",
+            "amount": 50000,
+            "timestamp": 1790623889132
+          }
+        ]
+      }
+    ],
+    "expenses": [
+      {
+        "id": 1788588000000,
+        "amount": 2500000,
+        "note": "Аренда помещения (Сентябрь)",
+        "timestamp": 1788588000000
+      },
+      {
+        "id": 1789464600000,
+        "amount": 150000,
+        "note": "Интернет и связь",
+        "timestamp": 1789464600000
+      },
+      {
+        "id": 1790334000000,
+        "amount": 200000,
+        "note": "Фирменные пакеты и расходники",
+        "timestamp": 1790334000000
+      },
+      {
+        "id": 1791180000000,
+        "amount": 2500000,
+        "note": "Аренда помещения (Октябрь)",
+        "timestamp": 1791180000000
+      },
+      {
+        "id": 1791626400000,
+        "amount": 150000,
+        "note": "Интернет и связь",
+        "timestamp": 1791626400000
+      }
+    ],
+    "settings": [
+      {
+        "key": "appName",
+        "value": "NMN"
+      },
+      {
+        "key": "currency",
+        "value": "сум"
+      },
+      {
+        "key": "device_id",
+        "value": "d1ed5e53-52ca-490b-8ee0-69b64065af83"
+      },
+      {
+        "key": "lang",
+        "value": "ru"
+      },
+      {
+        "key": "license",
+        "value": {
+          "key": "SHOP-3697-7A7B-B728-DB42",
+          "deviceId": "d1ed5e53-52ca-490b-8ee0-69b64065af83",
+          "activatedAt": "2026-10-09T21:43:06.388Z",
+          "clientName": "Тестовый Клиент",
+          "status": "active"
+        }
+      }
+    ]
+  }
+}
