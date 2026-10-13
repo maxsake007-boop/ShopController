@@ -52,14 +52,25 @@ window.renderDashboard = () => {
             
             <!-- Charts Section -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
-                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-8 min-h-[300px] h-[320px] flex flex-col shadow-sm dashboard-chart-card">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 flex items-center gap-1.5">
-                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-accent"></i> ${state.lang === 'ru' ? 'График продаж' : 'Sotuvlar grafigi'}${state.dashboard.filter === 'week' ? ` (W${getWeekNumber(Date.now())})` : ''}
-                    </h3>
-                    <div class="flex-1 min-h-0 relative"><canvas id="barChart"></canvas></div>
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-8 min-h-[280px] h-[300px] sm:h-[320px] flex flex-col shadow-sm dashboard-chart-card">
+                    <div class="flex items-center justify-between mb-1.5 sm:mb-2 flex-wrap gap-1.5">
+                        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 flex-shrink-0">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-accent"></i> 
+                            <span>${state.lang === 'ru' ? 'График продаж' : 'Sotuvlar grafigi'}${state.dashboard.filter === 'week' ? ` (W${getWeekNumber(Date.now())})` : ''}</span>
+                        </h3>
+                        <div id="chart-selected-info" class="text-[11px] sm:text-xs font-black text-slate-800 bg-orange-50 px-2.5 py-1 rounded-xl border border-orange-200/80 transition-all flex items-center gap-1.5 shadow-sm max-w-full">
+                            <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0 animate-pulse"></span>
+                            <span id="chart-selected-text" class="truncate">${state.lang === 'ru' ? 'Нажмите на дату' : 'Sanani tanlang'}</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden custom-scrollbar touch-pan-x select-none" id="chart-scroll-wrapper">
+                        <div id="chart-canvas-container" class="h-full relative min-w-full">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-4 min-h-[300px] h-[320px] flex flex-col shadow-sm dashboard-chart-card">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 flex items-center gap-1.5">
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-4 min-h-[260px] h-[300px] sm:h-[320px] flex flex-col shadow-sm dashboard-chart-card">
+                    <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 sm:mb-2 flex items-center gap-1.5">
                         <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-accent"></i> ${state.lang === 'ru' ? 'Способы оплаты' : 'To\'lov turlari'}
                     </h3>
                     <div class="flex-1 min-h-0 relative flex items-center justify-center"><canvas id="doughnutChart"></canvas></div>
@@ -194,13 +205,21 @@ window.initCharts = () => {
                 .reduce((sum, s) => sum + s.total, 0);
         });
     } else if (state.dashboard.filter === 'week') {
-        chartLabels = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+        const weekDays = state.lang === 'uz'
+            ? ["Dush", "Sesh", "Chor", "Pay", "Jum", "Shan", "Yak"]
+            : ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
         
         const now = new Date();
         const currentDay = now.getDay();
         const daysToMonday = currentDay === 0 ? 6 : currentDay - 1;
         const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysToMonday);
         startOfWeek.setHours(0, 0, 0, 0);
+
+        chartLabels = [...Array(7)].map((_, i) => {
+            const d = new Date(startOfWeek);
+            d.setDate(startOfWeek.getDate() + i);
+            return `${weekDays[i]}, ${d.getDate()}`;
+        });
 
         chartData = [...Array(7)].map((_, i) => {
             const startDay = new Date(startOfWeek);
@@ -221,8 +240,8 @@ window.initCharts = () => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         
         const shortMonths = state.lang === 'uz' 
-            ? ["Yan", "Fev", "Mar", "Apr", "May", "Iyun", "Iyul", "Avg", "Sen", "Okt", "Noy", "Dek"]
-            : ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+            ? ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"]
+            : ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
         
         const startOfMonth = new Date(year, month, 1);
         startOfMonth.setHours(0, 0, 0, 0);
@@ -248,14 +267,14 @@ window.initCharts = () => {
     } else if (state.dashboard.filter === 'quarter') {
         const now = new Date();
         const currentQuarterStartMonth = Math.floor(now.getMonth() / 3) * 3;
-        const shortMonths = state.lang === 'uz' 
-            ? ["Yan", "Fev", "Mar", "Apr", "May", "Iyun", "Iyul", "Avg", "Sen", "Okt", "Noy", "Dek"]
-            : ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+        const qMonths = state.lang === 'uz' 
+            ? ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"]
+            : ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         
         chartLabels = [
-            shortMonths[currentQuarterStartMonth],
-            shortMonths[currentQuarterStartMonth + 1],
-            shortMonths[currentQuarterStartMonth + 2]
+            qMonths[currentQuarterStartMonth],
+            qMonths[currentQuarterStartMonth + 1],
+            qMonths[currentQuarterStartMonth + 2]
         ];
         
         chartData = [0, 1, 2].map(offset => {
@@ -270,11 +289,11 @@ window.initCharts = () => {
         });
     } else { // 'year'
         const now = new Date();
-        const shortMonths = state.lang === 'uz' 
+        const yearMonths = state.lang === 'uz' 
             ? ["Yan", "Fev", "Mar", "Apr", "May", "Iyun", "Iyul", "Avg", "Sen", "Okt", "Noy", "Dek"]
             : ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
         
-        chartLabels = shortMonths;
+        chartLabels = yearMonths;
         
         chartData = [...Array(12)].map((_, m) => {
             const start = new Date(now.getFullYear(), m, 1);
@@ -290,11 +309,34 @@ window.initCharts = () => {
     const isQuarter = state.dashboard.filter === 'quarter';
     const filter = state.dashboard.filter;
 
+    const scrollWrapper = document.getElementById('chart-scroll-wrapper');
+    const canvasContainer = document.getElementById('chart-canvas-container');
+
+    if (canvasContainer && scrollWrapper) {
+        // Sufficient pixel width per data point so all labels (e.g. "1 окт", "2 окт"...) are crisp and never skipped
+        const minPerLabel = filter === 'month' ? 36 : (filter === 'today' ? 38 : (filter === 'year' ? 44 : 0));
+        const neededWidth = chartLabels.length * minPerLabel;
+        if (neededWidth > scrollWrapper.clientWidth) {
+            canvasContainer.style.width = `${neededWidth}px`;
+        } else {
+            canvasContainer.style.width = '100%';
+        }
+    }
+
     const formatShortY = (val) => {
         if (!val) return '0';
         if (val >= 1000000) return (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'M';
         if (val >= 1000) return (val / 1000).toFixed(0) + 'k';
         return val;
+    };
+
+    const updateSelectedInfo = (index) => {
+        const textEl = document.getElementById('chart-selected-text');
+        if (!textEl || index < 0 || index >= chartLabels.length) return;
+        const label = chartLabels[index];
+        const val = chartData[index] || 0;
+        const cur = state.settings.currency || 'сум';
+        textEl.innerHTML = `<span class="text-slate-500 font-semibold">${label}:</span> <span class="text-accent font-black">${formatPrice(val)} ${cur}</span>`;
     };
 
     barChartInstance = new Chart(ctxBar, {
@@ -309,9 +351,12 @@ window.initCharts = () => {
                 fill: !isQuarter, 
                 backgroundColor: isQuarter ? 'rgba(255, 107, 0, 0.85)' : 'rgba(255, 107, 0, 0.12)', 
                 borderWidth: isQuarter ? 0 : 2.5, 
-                pointRadius: isQuarter ? 0 : (filter === 'month' ? 1.5 : 2.5), 
-                pointHoverRadius: 6,
-                pointHitRadius: 16,
+                pointRadius: isQuarter ? 0 : (filter === 'month' ? 2.5 : 3.5), 
+                pointHoverRadius: isQuarter ? 0 : 8,
+                pointHoverBorderWidth: 2.5,
+                pointHoverBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#FF6B00',
+                pointHitRadius: 35,
                 pointBackgroundColor: '#FF6B00',
                 borderRadius: isQuarter ? 14 : 0,
                 maxBarThickness: isQuarter ? 48 : undefined
@@ -319,15 +364,38 @@ window.initCharts = () => {
         },
         options: { 
             maintainAspectRatio: false, 
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+                axis: 'x'
+            },
+            hover: {
+                mode: 'index',
+                intersect: false
+            },
+            onHover: (event, activeElements) => {
+                if (activeElements && activeElements.length > 0) {
+                    updateSelectedInfo(activeElements[0].index);
+                }
+            },
+            onClick: (event, activeElements) => {
+                if (activeElements && activeElements.length > 0) {
+                    updateSelectedInfo(activeElements[0].index);
+                }
+            },
             plugins: { 
                 legend: { display: false },
                 tooltip: {
+                    enabled: true,
                     backgroundColor: '#0F172A',
                     padding: 8,
                     cornerRadius: 10,
+                    displayColors: false,
                     titleFont: { size: 10, weight: 'bold' },
                     bodyFont: { size: 11, weight: 'bold' },
                     callbacks: {
+                        title: (items) => items[0]?.label || '',
                         label: (ctx) => `${formatPrice(ctx.raw)} ${state.settings.currency || 'сум'}`
                     }
                 }
@@ -347,16 +415,56 @@ window.initCharts = () => {
                     grid: { display: false },
                     ticks: {
                         font: { size: 9, weight: 'bold' },
-                        color: '#94A3B8',
+                        color: '#64748B',
                         maxRotation: 0,
                         minRotation: 0,
-                        autoSkip: true,
-                        maxTicksLimit: filter === 'today' ? 9 : (filter === 'month' ? 7 : (filter === 'year' ? 6 : 7))
+                        autoSkip: false
                     }
                 }
             }
         }
     });
+
+    // Touch event listeners to guarantee instantaneous mobile touch response
+    const handleTouchInteraction = (e) => {
+        if (!barChartInstance) return;
+        const points = barChartInstance.getElementsAtEventForMode(e, 'index', { intersect: false, axis: 'x' }, true);
+        if (points && points.length > 0) {
+            updateSelectedInfo(points[0].index);
+        }
+    };
+    ctxBar.addEventListener('touchstart', handleTouchInteraction, { passive: true });
+    ctxBar.addEventListener('touchmove', handleTouchInteraction, { passive: true });
+
+    // Set default selected info and auto-scroll to current period/day
+    let activeIndex = -1;
+    const now = new Date();
+    if (filter === 'today') {
+        const curH = now.getHours();
+        activeIndex = Math.max(0, Math.min(chartLabels.length - 1, curH - 6));
+    } else if (filter === 'week') {
+        const curD = now.getDay();
+        activeIndex = curD === 0 ? 6 : curD - 1;
+    } else if (filter === 'month') {
+        activeIndex = Math.min(chartLabels.length - 1, now.getDate() - 1);
+    } else if (filter === 'quarter') {
+        activeIndex = Math.min(2, now.getMonth() - Math.floor(now.getMonth() / 3) * 3);
+    } else if (filter === 'year') {
+        activeIndex = now.getMonth();
+    }
+
+    if (activeIndex >= 0 && activeIndex < chartLabels.length) {
+        updateSelectedInfo(activeIndex);
+    }
+
+    if (scrollWrapper && canvasContainer && canvasContainer.clientWidth > scrollWrapper.clientWidth && activeIndex >= 0) {
+        setTimeout(() => {
+            const totalW = canvasContainer.clientWidth;
+            const itemW = totalW / chartLabels.length;
+            const targetScroll = (activeIndex * itemW) - (scrollWrapper.clientWidth / 2) + (itemW / 2);
+            scrollWrapper.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+        }, 50);
+    }
 
     // Payment types for doughnut chart
     const types = { cash: 0, card: 0, Уплочен: 0 };

@@ -228,13 +228,18 @@ input[type="number"]::-webkit-outer-spin-button {
 
     /* Dashboard charts on mobile: comfortable height and breathing room */
     .dashboard-chart-card {
-        min-height: 290px !important;
-        height: 310px !important;
+        min-height: 270px !important;
+        height: 290px !important;
     }
 
     /* Touch targets and scrolling */
     .touch-pan-y {
         touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .touch-pan-x {
+        touch-action: pan-x !important;
         -webkit-overflow-scrolling: touch;
     }
 
