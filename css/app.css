@@ -243,6 +243,10 @@ input[type="number"]::-webkit-outer-spin-button {
         -webkit-overflow-scrolling: touch;
     }
 
+    .touch-none {
+        touch-action: none !important;
+    }
+
     /* Dedicated mobile scale reduction for Sklad and Dashboard only */
     .sklad-page-content {
         zoom: 0.82 !important;

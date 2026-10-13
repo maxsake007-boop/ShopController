@@ -3,6 +3,20 @@
 let barChartInstance = null;
 let doughnutChartInstance = null;
 
+window.currentChartIndex = -1;
+window.currentChartLabels = [];
+window.currentChartData = [];
+
+window.stepChartDate = (delta) => {
+    if (!window.currentChartLabels || window.currentChartLabels.length === 0) return;
+    const maxIdx = window.currentChartLabels.length - 1;
+    let nextIdx = (window.currentChartIndex >= 0 ? window.currentChartIndex : 0) + delta;
+    nextIdx = Math.max(0, Math.min(maxIdx, nextIdx));
+    if (typeof window.selectChartDayByIndex === 'function') {
+        window.selectChartDayByIndex(nextIdx);
+    }
+};
+
 window.renderDashboard = () => {
     const stats = getStats(state.dashboard.filter);
     const startTime = getStartTime(state.dashboard.filter);
@@ -53,20 +67,21 @@ window.renderDashboard = () => {
             <!-- Charts Section -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
                 <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-8 min-h-[280px] h-[300px] sm:h-[320px] flex flex-col shadow-sm dashboard-chart-card">
-                    <div class="flex items-center justify-between mb-1.5 sm:mb-2 flex-wrap gap-1.5">
+                    <div class="flex items-center justify-between mb-2 flex-wrap gap-1.5">
                         <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 flex-shrink-0">
                             <i data-lucide="trending-up" class="w-3.5 h-3.5 text-accent"></i> 
                             <span>${state.lang === 'ru' ? 'График продаж' : 'Sotuvlar grafigi'}${state.dashboard.filter === 'week' ? ` (W${getWeekNumber(Date.now())})` : ''}</span>
                         </h3>
-                        <div id="chart-selected-info" class="text-[11px] sm:text-xs font-black text-slate-800 bg-orange-50 px-2.5 py-1 rounded-xl border border-orange-200/80 transition-all flex items-center gap-1.5 shadow-sm max-w-full">
-                            <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0 animate-pulse"></span>
-                            <span id="chart-selected-text" class="truncate">${state.lang === 'ru' ? 'Нажмите на дату' : 'Sanani tanlang'}</span>
+                        <div id="chart-selected-info" class="flex items-center gap-1 bg-orange-50/90 px-1.5 py-0.5 rounded-xl border border-orange-200 shadow-2xs">
+                            <button type="button" onclick="stepChartDate(-1)" class="w-7 h-6 rounded-lg bg-white hover:bg-orange-100 active:scale-90 text-slate-700 flex items-center justify-center border border-orange-100 font-black text-xs cursor-pointer select-none transition-all shadow-xs" title="${state.lang === 'ru' ? 'Предыдущая дата' : 'Oldingi sana'}">◀</button>
+                            <div id="chart-selected-text" class="text-[11px] sm:text-xs font-black text-slate-800 px-1.5 min-w-[130px] text-center truncate select-none">
+                                ${state.lang === 'ru' ? 'Нажмите на дату' : 'Sanani tanlang'}
+                            </div>
+                            <button type="button" onclick="stepChartDate(1)" class="w-7 h-6 rounded-lg bg-white hover:bg-orange-100 active:scale-90 text-slate-700 flex items-center justify-center border border-orange-100 font-black text-xs cursor-pointer select-none transition-all shadow-xs" title="${state.lang === 'ru' ? 'Следующая дата' : 'Keyingi sana'}">▶</button>
                         </div>
                     </div>
-                    <div class="flex-1 min-h-0 relative overflow-x-auto overflow-y-hidden custom-scrollbar touch-pan-x select-none" id="chart-scroll-wrapper">
-                        <div id="chart-canvas-container" class="h-full relative min-w-full">
-                            <canvas id="barChart"></canvas>
-                        </div>
+                    <div class="flex-1 min-h-0 relative w-full overflow-hidden select-none" id="chart-container">
+                        <canvas id="barChart" class="w-full h-full block cursor-pointer touch-none"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 md:col-span-4 min-h-[260px] h-[300px] sm:h-[320px] flex flex-col shadow-sm dashboard-chart-card">
@@ -309,19 +324,8 @@ window.initCharts = () => {
     const isQuarter = state.dashboard.filter === 'quarter';
     const filter = state.dashboard.filter;
 
-    const scrollWrapper = document.getElementById('chart-scroll-wrapper');
-    const canvasContainer = document.getElementById('chart-canvas-container');
-
-    if (canvasContainer && scrollWrapper) {
-        // Sufficient pixel width per data point so all labels (e.g. "1 окт", "2 окт"...) are crisp and never skipped
-        const minPerLabel = filter === 'month' ? 36 : (filter === 'today' ? 38 : (filter === 'year' ? 44 : 0));
-        const neededWidth = chartLabels.length * minPerLabel;
-        if (neededWidth > scrollWrapper.clientWidth) {
-            canvasContainer.style.width = `${neededWidth}px`;
-        } else {
-            canvasContainer.style.width = '100%';
-        }
-    }
+    window.currentChartLabels = chartLabels;
+    window.currentChartData = chartData;
 
     const formatShortY = (val) => {
         if (!val) return '0';
@@ -333,11 +337,37 @@ window.initCharts = () => {
     const updateSelectedInfo = (index) => {
         const textEl = document.getElementById('chart-selected-text');
         if (!textEl || index < 0 || index >= chartLabels.length) return;
+        window.currentChartIndex = index;
         const label = chartLabels[index];
         const val = chartData[index] || 0;
         const cur = state.settings.currency || 'сум';
         textEl.innerHTML = `<span class="text-slate-500 font-semibold">${label}:</span> <span class="text-accent font-black">${formatPrice(val)} ${cur}</span>`;
     };
+
+    window.selectChartDayByIndex = (index) => {
+        if (index < 0 || index >= chartLabels.length) return;
+        updateSelectedInfo(index);
+        if (barChartInstance) {
+            barChartInstance.setActiveElements([{
+                datasetIndex: 0,
+                index: index
+            }]);
+            if (barChartInstance.tooltip && barChartInstance.scales.x && barChartInstance.scales.y) {
+                barChartInstance.tooltip.setActiveElements([{
+                    datasetIndex: 0,
+                    index: index
+                }], {
+                    x: barChartInstance.scales.x.getPixelForValue(index),
+                    y: barChartInstance.scales.y.getPixelForValue(chartData[index] || 0)
+                });
+            }
+            barChartInstance.update('none');
+        }
+    };
+
+    // Angled month labels so all 31 days fit comfortably without collision
+    const tickRotation = filter === 'month' ? 60 : 0;
+    const tickFontSize = filter === 'month' ? 8 : (filter === 'today' ? 8.5 : 9);
 
     barChartInstance = new Chart(ctxBar, {
         type: isQuarter ? 'bar' : 'line',
@@ -351,12 +381,12 @@ window.initCharts = () => {
                 fill: !isQuarter, 
                 backgroundColor: isQuarter ? 'rgba(255, 107, 0, 0.85)' : 'rgba(255, 107, 0, 0.12)', 
                 borderWidth: isQuarter ? 0 : 2.5, 
-                pointRadius: isQuarter ? 0 : (filter === 'month' ? 2.5 : 3.5), 
-                pointHoverRadius: isQuarter ? 0 : 8,
-                pointHoverBorderWidth: 2.5,
+                pointRadius: isQuarter ? 0 : (filter === 'month' ? 2 : 3), 
+                pointHoverRadius: isQuarter ? 0 : 9,
+                pointHoverBorderWidth: 3,
                 pointHoverBorderColor: '#ffffff',
                 pointHoverBackgroundColor: '#FF6B00',
-                pointHitRadius: 35,
+                pointHitRadius: 50,
                 pointBackgroundColor: '#FF6B00',
                 borderRadius: isQuarter ? 14 : 0,
                 maxBarThickness: isQuarter ? 48 : undefined
@@ -381,7 +411,7 @@ window.initCharts = () => {
             },
             onClick: (event, activeElements) => {
                 if (activeElements && activeElements.length > 0) {
-                    updateSelectedInfo(activeElements[0].index);
+                    window.selectChartDayByIndex(activeElements[0].index);
                 }
             },
             plugins: { 
@@ -414,10 +444,10 @@ window.initCharts = () => {
                 x: { 
                     grid: { display: false },
                     ticks: {
-                        font: { size: 9, weight: 'bold' },
+                        font: { size: tickFontSize, weight: 'bold' },
                         color: '#64748B',
-                        maxRotation: 0,
-                        minRotation: 0,
+                        maxRotation: tickRotation,
+                        minRotation: tickRotation,
                         autoSkip: false
                     }
                 }
@@ -425,18 +455,49 @@ window.initCharts = () => {
         }
     });
 
-    // Touch event listeners to guarantee instantaneous mobile touch response
-    const handleTouchInteraction = (e) => {
-        if (!barChartInstance) return;
-        const points = barChartInstance.getElementsAtEventForMode(e, 'index', { intersect: false, axis: 'x' }, true);
-        if (points && points.length > 0) {
-            updateSelectedInfo(points[0].index);
+    // Enormous Touch Hitbox: maps any touch X-coordinate anywhere on canvas directly to that day
+    const handleDirectCanvasTouch = (e) => {
+        if (!barChartInstance || !chartLabels || chartLabels.length === 0) return;
+        
+        if (e.cancelable && e.type.startsWith('touch')) {
+            e.preventDefault();
         }
+        
+        const rect = ctxBar.getBoundingClientRect();
+        const clientX = e.touches && e.touches.length > 0 
+            ? e.touches[0].clientX 
+            : (e.clientX !== undefined ? e.clientX : null);
+        if (clientX === null) return;
+        
+        const relativeX = clientX - rect.left;
+        
+        let index = -1;
+        if (barChartInstance.scales && barChartInstance.scales.x) {
+            const xScale = barChartInstance.scales.x;
+            const val = xScale.getValueForPixel(relativeX);
+            if (typeof val === 'number') {
+                index = Math.round(val);
+            }
+        }
+        
+        if (index < 0 || index >= chartLabels.length) {
+            const percent = Math.max(0, Math.min(1, relativeX / rect.width));
+            index = Math.min(chartLabels.length - 1, Math.floor(percent * chartLabels.length));
+        }
+        
+        index = Math.max(0, Math.min(chartLabels.length - 1, index));
+        window.selectChartDayByIndex(index);
     };
-    ctxBar.addEventListener('touchstart', handleTouchInteraction, { passive: true });
-    ctxBar.addEventListener('touchmove', handleTouchInteraction, { passive: true });
 
-    // Set default selected info and auto-scroll to current period/day
+    ctxBar.addEventListener('touchstart', handleDirectCanvasTouch, { passive: false });
+    ctxBar.addEventListener('touchmove', handleDirectCanvasTouch, { passive: false });
+    ctxBar.addEventListener('pointerdown', handleDirectCanvasTouch);
+    ctxBar.addEventListener('pointermove', (e) => {
+        if (e.buttons > 0) handleDirectCanvasTouch(e);
+    });
+    ctxBar.addEventListener('click', handleDirectCanvasTouch);
+
+    // Initial default active day selection
     let activeIndex = -1;
     const now = new Date();
     if (filter === 'today') {
@@ -454,16 +515,7 @@ window.initCharts = () => {
     }
 
     if (activeIndex >= 0 && activeIndex < chartLabels.length) {
-        updateSelectedInfo(activeIndex);
-    }
-
-    if (scrollWrapper && canvasContainer && canvasContainer.clientWidth > scrollWrapper.clientWidth && activeIndex >= 0) {
-        setTimeout(() => {
-            const totalW = canvasContainer.clientWidth;
-            const itemW = totalW / chartLabels.length;
-            const targetScroll = (activeIndex * itemW) - (scrollWrapper.clientWidth / 2) + (itemW / 2);
-            scrollWrapper.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
-        }, 50);
+        window.selectChartDayByIndex(activeIndex);
     }
 
     // Payment types for doughnut chart
