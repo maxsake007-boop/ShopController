@@ -10,6 +10,8 @@ window.state = {
         currency: 'сум'
     },
     activeTab: 'kassa',
+    previousTab: 'kassa',
+    settingsUnlocked: false,
     showPurchasePrices: false,
     visiblePurchasePrices: [],
     kassa: {

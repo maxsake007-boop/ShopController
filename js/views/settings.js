@@ -1,10 +1,94 @@
 // --- SETTINGS VIEW ---
 
-window.renderSettings = () => `
+window.unlockSettings = () => {
+    const input = document.getElementById('settings-pin-input');
+    const pin = input ? input.value.trim() : '';
+    if (pin === '0310') {
+        state.settingsUnlocked = true;
+        render();
+        showToast(state.lang === 'ru' ? '🔓 Доступ разрешен' : '🔓 Kirish ruxsati berildi');
+    } else {
+        showToast(state.lang === 'ru' ? '❌ Неверный пароль' : '❌ Noto\'g\'ri parol');
+        if (input) {
+            input.value = '';
+            input.classList.add('border-red-500', 'animate-shake');
+            setTimeout(() => input.classList.remove('animate-shake', 'border-red-500'), 500);
+            input.focus();
+        }
+    }
+};
+
+window.renderSettings = () => {
+    if (!state.settingsUnlocked) {
+        setTimeout(() => {
+            const pinInput = document.getElementById('settings-pin-input');
+            if (pinInput) pinInput.focus();
+        }, 60);
+
+        return `
+            <div class="max-w-md mx-auto py-8 sm:py-14 px-3 sm:px-4">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl text-center space-y-5 animate-in scale-in">
+                    <div class="w-16 h-16 rounded-2xl bg-orange-100 text-accent flex items-center justify-center mx-auto shadow-inner">
+                        <i data-lucide="shield-alert" class="w-8 h-8"></i>
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <h2 class="text-base sm:text-lg font-black uppercase italic text-slate-800 tracking-wide">
+                            ${state.lang === 'ru' ? 'Доступ к настройкам' : 'Sozlamalarga kirish'}
+                        </h2>
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                            ${state.lang === 'ru' ? 'Введите пароль администратора' : 'Administrator parolini kiriting'}
+                        </p>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); unlockSettings();" class="space-y-4">
+                        <div class="relative max-w-[220px] mx-auto">
+                            <input 
+                                id="settings-pin-input" 
+                                type="password" 
+                                inputmode="numeric" 
+                                pattern="[0-9]*" 
+                                maxlength="4" 
+                                placeholder="••••" 
+                                autofocus 
+                                autocomplete="off"
+                                class="w-full text-center bg-slate-50 border-2 border-slate-200 focus:border-accent text-3xl font-black rounded-2xl py-3 text-slate-800 tracking-[0.35em] outline-none shadow-inner transition-all min-h-[56px]"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length === 4) unlockSettings();"
+                            >
+                        </div>
+
+                        <div class="flex gap-2.5 pt-2">
+                            <button 
+                                type="button" 
+                                onclick="switchTab(state.previousTab || 'kassa')" 
+                                class="flex-1 py-3 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-xl font-black uppercase text-xs tracking-wider transition-all min-h-[44px] flex items-center justify-center active:scale-95 cursor-pointer"
+                            >
+                                ${state.lang === 'ru' ? 'Отмена' : 'Bekor qilish'}
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="flex-1 py-3 bg-slate-900 hover:bg-black text-white rounded-xl font-black uppercase text-xs tracking-wider shadow-md active:scale-95 transition-all min-h-[44px] flex items-center justify-center cursor-pointer"
+                            >
+                                ${state.lang === 'ru' ? 'Войти' : 'Kirish'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+    }
+
+    return `
     <div class="max-w-xl mx-auto space-y-3.5 sm:space-y-4 pb-16">
-        <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
-            <i data-lucide="settings" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('settings')}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="text-xs sm:text-base font-black uppercase italic text-slate-800 tracking-wider flex items-center gap-2">
+                <i data-lucide="settings" class="text-accent w-4 h-4 sm:w-5 sm:h-5"></i> ${t('settings')}
+            </h2>
+            <button type="button" onclick="state.settingsUnlocked=false; render();" class="text-[10px] font-black uppercase text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 px-2.5 py-1 rounded-lg border border-slate-200 transition-all flex items-center gap-1 shadow-2xs cursor-pointer" title="${state.lang === 'ru' ? 'Заблокировать настройки' : 'Sozlamalarni qulflash'}">
+                <i data-lucide="lock" class="w-3 h-3"></i>
+                <span>${state.lang === 'ru' ? 'Заблокировать' : 'Qulflash'}</span>
+            </button>
+        </div>
         
         <!-- Backup & Restore Section -->
         <div class="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 sm:space-y-4">
@@ -79,7 +163,8 @@ window.renderSettings = () => `
             </div>
         </div>
     </div>
-`;
+    `;
+};
 
 window.updateSettings = async (key, val) => {
     state.settings[key] = val;

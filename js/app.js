@@ -39,6 +39,13 @@ window.renderNav = () => {
 };
 
 window.switchTab = (id) => {
+    if (state.activeTab !== id) {
+        state.previousTab = state.activeTab;
+    }
+    // Always lock settings whenever user leaves the settings tab
+    if (state.activeTab === 'settings' && id !== 'settings') {
+        state.settingsUnlocked = false;
+    }
     state.activeTab = id;
     const titleLabel = document.getElementById('current-tab-label');
     if (titleLabel) titleLabel.textContent = t(id);
@@ -88,7 +95,7 @@ window.initApp = async () => {
                 window.location.reload();
             }
         });
-        navigator.serviceWorker.register('./sw.js?v=3.4').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=3.5').then((reg) => {
             console.log('[PWA] Service Worker зарегистрирован:', reg.scope);
             reg.update().catch(() => {});
         }).catch((err) => {
