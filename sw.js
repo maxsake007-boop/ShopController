@@ -123,7 +123,23 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // 3. Для остальных GET-запросов - Cache First / Stale While Revalidate
+    // 2.5. Для локальных JS и CSS файлов приложения - Network First, чтобы изменения кода вступали в силу сразу
+    if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+        event.respondWith(
+            fetch(request)
+                .then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const copy = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                    }
+                    return networkResponse;
+                })
+                .catch(() => caches.match(request))
+        );
+        return;
+    }
+
+    // 3. Для остальных GET-запросов (картинки, шрифты) - Cache First
     event.respondWith(
         caches.match(request).then((cachedResponse) => {
             if (cachedResponse) {
