@@ -59,23 +59,13 @@ window.getOrCreateDeviceId = async () => {
 };
 
 /**
- * Проверка текущего статуса активации в IndexedDB с проверкой привязки к устройству
+ * Проверка текущего статуса активации в IndexedDB
  * @returns {Promise<Object|null>} Объект лицензии или null
  */
 window.checkActivationStatus = async () => {
     try {
-        const [licenseRecord, currentDeviceId] = await Promise.all([
-            db.settings.get('license'),
-            window.getOrCreateDeviceId()
-        ]);
-
+        const licenseRecord = await db.settings.get('license');
         if (licenseRecord && licenseRecord.value && licenseRecord.value.status === 'active') {
-            // Защита от подделки: лицензия обязана содержать deviceId текущего устройства
-            if (licenseRecord.value.deviceId && licenseRecord.value.deviceId !== currentDeviceId) {
-                console.warn('[License] Несовпадение deviceId! Удаление чужой лицензии.');
-                await db.settings.delete('license');
-                return null;
-            }
             return licenseRecord.value;
         }
         return null;
