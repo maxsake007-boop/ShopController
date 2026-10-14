@@ -84,6 +84,9 @@ window.exportBackup = async () => {
             }
         }
 
+        // Фильтруем системные ключи лицензии и устройства — они НЕ ДОЛЖНЫ попадать в бэкап!
+        const safeSettings = settings.filter(s => s.key !== 'license' && s.key !== 'device_id');
+
         updateBackupProgress(85, 'Формирование файла JSON...');
 
         const backupConfig = window.CLIENT_CONFIG?.backup || {};
@@ -97,7 +100,7 @@ window.exportBackup = async () => {
                 sales: sales,
                 debtors: debtors,
                 expenses: expenses,
-                settings: settings
+                settings: safeSettings
             }
         };
 
@@ -303,7 +306,13 @@ window.executeRestoreBackup = async () => {
             }
         }
 
-        const localDeviceId = await getOrCreateDeviceId();
+        const currentDeviceId = await getOrCreateDeviceId();
+        // Запоминаем текущую лицензию устройства перед очисткой базы
+        const currentLicense = await db.settings.get('license');
+        const isDeviceActivated = !!(currentLicense && currentLicense.value && currentLicense.value.status === 'active');
+
+        // Строгая фильтрация: из бэкапа НИКОГДА не должны импортироваться license и device_id
+        const safeSettings = (backupObj.data.settings || []).filter(s => s.key !== 'license' && s.key !== 'device_id');
 
         updateBackupProgress(75, 'Атомарная запись в базу данных...');
 
@@ -329,38 +338,20 @@ window.executeRestoreBackup = async () => {
             if (backupObj.data.expenses?.length > 0) {
                 await db.expenses.bulkAdd(backupObj.data.expenses);
             }
-            if (backupObj.data.settings?.length > 0) {
-                // Сохраняем физический ID текущего устройства (предотвращает клонирование лицензии на 10 планшетов)
-                const sanitizedSettings = backupObj.data.settings.map(s => {
-                    if (s.key === 'device_id') return { key: 'device_id', value: localDeviceId };
-                    return s;
-                });
-                await db.settings.bulkAdd(sanitizedSettings);
+            if (safeSettings.length > 0) {
+                await db.settings.bulkAdd(safeSettings);
             }
-            // Гарантируем привязку локального идентификатора
-            await db.settings.put({ key: 'device_id', value: localDeviceId });
+
+            // Гарантируем сохранение ID текущего устройства
+            await db.settings.put({ key: 'device_id', value: currentDeviceId });
+
+            // Если устройство УЖЕ было активировано до восстановления, сохраняем его лицензию
+            if (isDeviceActivated) {
+                await db.settings.put(currentLicense);
+            }
         });
 
-        updateBackupProgress(95, 'Проверка лицензии и перезагрузка...');
-
-        // Проверяем статус лицензии из копии
-        const restoredLicense = await db.settings.get('license');
-        let isLicenseValid = false;
-
-        if (restoredLicense && restoredLicense.value && restoredLicense.value.key) {
-            const check = await window.verifyLicenseKey(restoredLicense.value.key);
-            if (check && check.success) {
-                isLicenseValid = true;
-                await db.settings.put({
-                    key: 'license',
-                    value: {
-                        ...restoredLicense.value,
-                        deviceId: localDeviceId,
-                        status: 'active'
-                    }
-                });
-            }
-        }
+        updateBackupProgress(95, 'Обновление интерфейса...');
 
         hideBackupProgressModal();
         window._pendingRestoreData = null;
@@ -370,15 +361,15 @@ window.executeRestoreBackup = async () => {
         await loadStateFromDb();
         render();
 
-        if (isLicenseValid) {
+        if (isDeviceActivated) {
             hideActivationScreen();
             showToast('✅ База данных успешно восстановлена!');
         } else {
-            // Если в файле был невалидный ключ, требуем ввод ключа на этом устройстве
+            // Если устройство не было активировано, требуем ввод ключа на этом устройстве
             if (window.showActivationScreen) {
                 window.showActivationScreen();
             }
-            showToast('Данные восстановлены. Активируйте приложение ключом');
+            showToast('Данные восстановлены. Введите ключ для активации');
         }
 
     } catch (err) {

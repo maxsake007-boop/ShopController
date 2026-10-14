@@ -4,27 +4,54 @@
 
 /**
  * Получение или генерация уникального ID устройства
- * Хранится в IndexedDB (db.settings)
+ * Хранится синхронно в 3 независимых слоях (IndexedDB, localStorage, Cookies)
+ * для защиты от случайной очистки одного из хранилищ.
  */
 window.getOrCreateDeviceId = async () => {
     try {
-        const stored = await db.settings.get('device_id');
-        if (stored && stored.value) {
-            return stored.value;
+        let devId = null;
+
+        // 1. Проверяем IndexedDB
+        try {
+            const stored = await db.settings.get('device_id');
+            if (stored && stored.value) devId = stored.value;
+        } catch (_) {}
+
+        // 2. Резервный поиск в localStorage
+        if (!devId && typeof localStorage !== 'undefined') {
+            try {
+                const ls = localStorage.getItem('agora_device_id');
+                if (ls) devId = ls;
+            } catch (_) {}
         }
 
-        // Генерация криптографически стойкого ID
-        let newId = '';
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-            newId = crypto.randomUUID();
-        } else {
-            const arr = new Uint8Array(16);
-            crypto.getRandomValues(arr);
-            newId = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+        // 3. Резервный поиск в Cookies (хранится 10 лет)
+        if (!devId && typeof document !== 'undefined' && document.cookie) {
+            const match = document.cookie.match(/(?:^|;\s*)agora_device_id=([^;]+)/);
+            if (match && match[1]) devId = decodeURIComponent(match[1]);
         }
 
-        await db.settings.put({ key: 'device_id', value: newId });
-        return newId;
+        // 4. Если ID нигде нет — генерируем новый криптостойкий ID
+        if (!devId) {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                devId = crypto.randomUUID();
+            } else {
+                const arr = new Uint8Array(16);
+                crypto.getRandomValues(arr);
+                devId = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+        }
+
+        // Синхронизируем во все 3 хранилища для максимальной живучести
+        try { await db.settings.put({ key: 'device_id', value: devId }); } catch (_) {}
+        try { if (typeof localStorage !== 'undefined') localStorage.setItem('agora_device_id', devId); } catch (_) {}
+        try {
+            if (typeof document !== 'undefined') {
+                document.cookie = `agora_device_id=${encodeURIComponent(devId)}; max-age=315360000; path=/; SameSite=Lax`;
+            }
+        } catch (_) {}
+
+        return devId;
     } catch (e) {
         console.error('[License] Ошибка получения deviceId:', e);
         return 'device-' + Date.now();
@@ -32,13 +59,23 @@ window.getOrCreateDeviceId = async () => {
 };
 
 /**
- * Проверка текущего статуса активации в IndexedDB
+ * Проверка текущего статуса активации в IndexedDB с проверкой привязки к устройству
  * @returns {Promise<Object|null>} Объект лицензии или null
  */
 window.checkActivationStatus = async () => {
     try {
-        const licenseRecord = await db.settings.get('license');
+        const [licenseRecord, currentDeviceId] = await Promise.all([
+            db.settings.get('license'),
+            window.getOrCreateDeviceId()
+        ]);
+
         if (licenseRecord && licenseRecord.value && licenseRecord.value.status === 'active') {
+            // Защита от подделки: лицензия обязана содержать deviceId текущего устройства
+            if (licenseRecord.value.deviceId && licenseRecord.value.deviceId !== currentDeviceId) {
+                console.warn('[License] Несовпадение deviceId! Удаление чужой лицензии.');
+                await db.settings.delete('license');
+                return null;
+            }
             return licenseRecord.value;
         }
         return null;
@@ -101,7 +138,7 @@ window.verifyKeyWithSupabase = async (licenseKey) => {
         if (!response.ok) {
             return {
                 success: false,
-                message: 'Неверный или недействительный ключ активации'
+                message: 'Ошибка обращения к серверу активации'
             };
         }
 
@@ -115,7 +152,7 @@ window.verifyKeyWithSupabase = async (licenseKey) => {
 
         return {
             success: false,
-            message: 'Неверный или недействительный ключ активации'
+            message: data?.message || 'Неверный или недействительный ключ активации'
         };
     } catch (err) {
         console.warn('[License] Сетевая ошибка проверки ключа Supabase:', err);
